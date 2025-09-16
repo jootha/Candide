@@ -13,17 +13,17 @@ struct Garden: View {
             Text("Jardin")
             
             ZStack{
-                Color.green.ignoresSafeArea()
+                Color.cGreen.ignoresSafeArea()
                 
                 VStack {
                     ZStack{
-                        Rectangle().fill(Color(.cDarkBlue2C3E50))
+                        Rectangle().fill(.cOrange)
                             .frame(width: 350, height: 200)
                             .cornerRadius(16)
                             .padding()
                         
                         Rectangle()
-                            .foregroundStyle(.blue)
+                            .foregroundStyle(.cDarkBlue)
                             .frame(width: 300, height: 150)
                         
                         HStack{
