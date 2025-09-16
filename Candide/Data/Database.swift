@@ -10,14 +10,8 @@ import SwiftUI
 // Liste des plantes
 var plants: [Plant] = [
     Plant(
-        name: "Ficus",
-        soilType: .wellDrained,
-        watering: .weekly,
-        sunlight: .indirectLight,
-        isIndoor: true,
-        plantTask: [] ),
-    Plant(
         name: "Lavande",
+        imageName: "lavande",
         soilType: .calcareous,
         watering: .every10Days,
         sunlight: .fullSun,
@@ -25,13 +19,22 @@ var plants: [Plant] = [
         plantTask: [] ),
     Plant(
         name: "Aloe Vera",
+        imageName: "aloevera",
         soilType: .cactusMix,
         watering: .biweekly,
         sunlight: .indirectLight,
         isIndoor: true,
         plantTask: [] ),
     Plant(
+        name: "Ficus",
+        soilType: .wellDrained,
+        watering: .weekly,
+        sunlight: .indirectLight,
+        isIndoor: true,
+        plantTask: [] ),
+    Plant(
         name: "Basilic",
+        imageName: "basilic",
         soilType: .rich,
         watering: .every2Days,
         sunlight: .fullSun,
@@ -39,6 +42,7 @@ var plants: [Plant] = [
         plantTask: [] ),
     Plant(
         name: "Monstera",
+        imageName: "monstera",
         soilType: .wellDrained,
         watering: .weekly,
         sunlight: .mediumLight,
@@ -46,6 +50,7 @@ var plants: [Plant] = [
         plantTask: [] ),
     Plant(
         name: "Romarin",
+        imageName: "romarin",
         soilType: .dry,
         watering: .weekly,
         sunlight: .fullSun,

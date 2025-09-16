@@ -8,39 +8,22 @@
 import SwiftUI
 
 struct Garden: View {
+    
     var body: some View {
-        VStack {
-            Text("Jardin")
-            
-            ZStack{
+
+        NavigationStack {
+            ZStack {
                 Color.cGreen.ignoresSafeArea()
                 
-                VStack {
-                    ZStack{
-                        Rectangle().fill(.cOrange)
-                            .frame(width: 350, height: 200)
-                            .cornerRadius(16)
-                            .padding()
-                        
-                        Rectangle()
-                            .foregroundStyle(.cDarkBlue)
-                            .frame(width: 300, height: 150)
-                        
-                        HStack{
-                            Spacer()
-                            ZStack{
-                                Circle().frame(width: 30)
-                                    .opacity(0.60)
-                                    .foregroundColor(.gray)
-                                Image(systemName: "heart.fill")
-                            }
-                            Spacer()
-                        }.frame(maxWidth: 350)
-                    }
-                }
+                ScrollView {
+                    ForEach(plants){ plant in
+                        GardenPlanteFrame(plant : plant)
+                    }.navigationTitle("Mon jardin")
+                    
+                }.padding(.horizontal)
             }
         }
-        .padding()
+        
     }
 }
 

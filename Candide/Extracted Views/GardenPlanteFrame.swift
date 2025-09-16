@@ -8,11 +8,29 @@
 import SwiftUI
 
 struct GardenPlanteFrame: View {
+    var plant: Plant
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        HStack {
+            ZStack {  //Carte rose avec image
+                if(!plant.imageName.isEmpty){
+                    Image(plant.imageName)
+                        .resizable()
+                        .scaledToFit()
+                        .cornerRadius(16)
+                        .padding(-8)
+                        .shadow(radius: 5)
+                        .overlay(alignment: .topTrailing) {
+                            TrashButton(plant: plants[0])
+                        }
+                }
+            }
+        }.frame(maxWidth: .infinity, maxHeight: .infinity)
+            .padding()
+            .background(Color.cYellow)
+            .cornerRadius(16)
     }
 }
-
 #Preview {
-    GardenPlanteFrame()
+    GardenPlanteFrame(plant: plants[3])
 }

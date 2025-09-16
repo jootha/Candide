@@ -8,11 +8,27 @@
 import SwiftUI
 
 struct TrashButton: View {
+
+    @State var plant: Plant
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Button {
+            if let index = plants.firstIndex(where: { $0.id == plant.id }) {
+                plants.remove(at: index)
+            }
+        } label: {
+            ZStack {  //Bouton edit
+                Circle().frame(width: 30)
+                    .foregroundColor(.cDarkBlue)
+                Image(systemName: "trash")
+                    .opacity(0.8)
+                    .foregroundColor(.cOrange)
+                    .font(.system(size: 15))
+            }
+        }
     }
 }
 
 #Preview {
-    TrashButton()
+    TrashButton(plant: plants[0])
 }
