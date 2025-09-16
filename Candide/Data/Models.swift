@@ -47,11 +47,35 @@ enum Filter: String {
 struct Plant : Identifiable {
     var id = UUID()
     var name: String
+    var imageName: String
     var soilType: SoilType
     var watering: WateringFrequency
     var sunlight: Sunlight
     var isIndoor: Bool
     var plantTask: [Task]
+    
+    init(id: UUID = UUID(), name: String, soilType: SoilType, watering: WateringFrequency, sunlight: Sunlight, isIndoor: Bool, plantTask: [Task]) {
+        self.id = id
+        self.name = name
+        self.imageName = ""
+        self.soilType = soilType
+        self.watering = watering
+        self.sunlight = sunlight
+        self.isIndoor = isIndoor
+        self.plantTask = plantTask
+    }
+    
+    init(id: UUID = UUID(), name: String, imageName: String, soilType: SoilType, watering: WateringFrequency, sunlight: Sunlight, isIndoor: Bool, plantTask: [Task]) {
+        self.id = id
+        self.name = name
+        self.imageName = imageName
+        self.soilType = soilType
+        self.watering = watering
+        self.sunlight = sunlight
+        self.isIndoor = isIndoor
+        self.plantTask = plantTask
+    }
+    
 }
 
 //Structure de tâches
