@@ -1,12 +1,11 @@
 //
 //  Database.swift
-//  Candide
+//  LeaDEMOexo
 //
-//  Created by apprenant84 on 15/09/2025.
+//  Created by apprenant95 on 15/09/2025.
 //
 
-import Foundation
-
+import SwiftUI
 
 // Liste des plantes
 var plants: [Plant] = [
@@ -69,6 +68,7 @@ var posts: [Post] = [
         author: users[3],
         date: "26/01/2025",
         nbLike: 42,
+        filter: .beginnerFriendly,
         comments: comments[2] ),
     Post(
         title: "DIY : Construire une jardinière en bois",
@@ -78,6 +78,7 @@ var posts: [Post] = [
         author: users[2],
         date: "26/01/2025",
         nbLike: 29,
+        filter: .beginnerFriendly,
         comments: comments[0] ),
     Post(
         title: "Les meilleures plantes dépolluantes",
@@ -87,6 +88,7 @@ var posts: [Post] = [
         author: users[1],
         date: "26/01/2025",
         nbLike: 78,
+        filter: .airPurifier,
         comments: comments[2] ) ]
 
 //Liste des commentaires
@@ -107,4 +109,3 @@ var comments = [ Comment(
 var users = [Profile(username: "alice_garden", profilePic: "person.circle"),
              Profile(username: "bob_the_planter", profilePic: "hammer.fill"),
              Profile(username: "clara_leaf", profilePic: "paintbrush.fill") ]
-

@@ -43,7 +43,8 @@ struct Garden: View {
                 }
             }
         }
-        .padding()    }
+        .padding()
+    }
 }
 
 #Preview {

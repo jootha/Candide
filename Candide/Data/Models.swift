@@ -1,11 +1,11 @@
 //
 //  Models.swift
-//  Candide
+//  LeaDEMOexo
 //
-//  Created by apprenant84 on 15/09/2025.
+//  Created by apprenant95 on 15/09/2025.
 //
 
-import Foundation
+import SwiftUI
 
 //Enums de la structure de plantes
 enum SoilType: String {
@@ -30,6 +30,17 @@ enum Sunlight: String {
     case indirectLight = "Lumière indirecte"
     case mediumLight = "Lumière moyenne"
     case shade = "Ombre"
+}
+
+//Enum de filtres de posts
+enum Filter: String {
+    case interior = "Plantes d’intérieur"
+        case aromatic = "Plantes aromatiques"
+        case lowWater = "Faible arrosage"
+        case fullSun = "Plein soleil"
+        case airPurifier = "Plantes dépolluantes"
+        case beginnerFriendly = "Débutant"
+        case edible = "Plantes comestibles"
 }
 
 //Structure de plantes
@@ -61,6 +72,7 @@ struct Post: Identifiable {
     var author: Profile
     var date: String
     var nbLike: Int
+    var filter: Filter
     var comments: Comment
 }
 
