@@ -19,7 +19,7 @@ struct Garden: View {
                     ZStack{
                         Rectangle().fill(Color(.cDarkBlue2C3E50))
                             .frame(width: 350, height: 200)
-                            .cornerRadius(16)q
+                            .cornerRadius(16)
                             .padding()
                         
                         Rectangle()
