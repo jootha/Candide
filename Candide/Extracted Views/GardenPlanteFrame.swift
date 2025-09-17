@@ -9,6 +9,7 @@ import SwiftUI
 
 struct GardenPlanteFrame: View {
     var plant: Plant
+    @ObservedObject var plantList: PlantListClass
 
     var body: some View {
         HStack {
@@ -33,7 +34,7 @@ struct GardenPlanteFrame: View {
                             .padding(-8)
                             //.offset(x: -100, y: 50)
                             .overlay(alignment: .topTrailing) {
-                                TrashButton(plant: plant)
+                                TrashButton(plant: plant, plantList: plantList)
                             }
                     }
                     //Text(plant.name).font(.system(size: 24)).bold()
@@ -47,5 +48,5 @@ struct GardenPlanteFrame: View {
 }
 
 #Preview {
-    GardenPlanteFrame(plant: plants[2])
+    GardenPlanteFrame(plant: plantListGlobalVar.plantList[0], plantList: plantListGlobalVar)
 }

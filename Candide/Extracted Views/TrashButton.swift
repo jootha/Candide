@@ -10,12 +10,15 @@ import SwiftUI
 struct TrashButton: View {
 
     @State var plant: Plant
-@ObservedObject var plantsList = listPlant
+    @ObservedObject var plantList = plantListGlobalVar
+    
     var body: some View {
         Button {
-            if let index = plants.firstIndex(where: { $0.id == plant.id }) {
-                plantsList.listPlants.remove(at: index)
-            }
+            plantList.printPlantListNames()
+            plantList.removePlant(plant)
+
+            
+            plantList.printPlantListNames()
         } label: {
             ZStack {  //Bouton edit
                 Circle().frame(width: 30)
@@ -30,5 +33,5 @@ struct TrashButton: View {
 }
 
 #Preview {
-    TrashButton(plant: plants[2])
+    TrashButton(plant: plantListGlobalVar.plantList[2])
 }

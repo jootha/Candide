@@ -108,10 +108,26 @@ struct Models: View {
     }
 }
 
-class PlantList: ObservableObject {
-    @Published var listPlants: [Plant]
+class PlantListClass: ObservableObject {
+    @Published var plantList: [Plant]
     
-    init(listPlants: [Plant] = plants) {
-        self.listPlants = listPlants
+    init(listPlants: [Plant] = plantListInitVar) {
+        self.plantList = listPlants
     }
+    
+    func printPlantListNames() {
+        print("Printing plant list: [")
+        for plant in plantList {
+            print("name : " + plant.name)
+        }
+        print("]")
+    }
+    func removePlant(_ plant : Plant){
+        if let index = plantList.firstIndex(where: { $0.id == plant.id }) {
+            plantList.remove(at: index)
+        }
+        print("plant removed : \(plant.name)")
+    }
+    
+    
 }

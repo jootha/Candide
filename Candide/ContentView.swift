@@ -16,6 +16,13 @@ struct ContentView: View {
                             Text("Mon Jardin")
                             Image(systemName: "leaf.circle.fill")
                         }
+
+                    Program()
+                        .tabItem {
+                            Text("Programme")
+                            Image(systemName: "calendar.circle.fill")
+                        }
+
                     AddPostView()
                         .tabItem {
                             Text("Forum")

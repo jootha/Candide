@@ -8,7 +8,7 @@
 import SwiftUI
 
 // Liste des plantes
-var plants: [Plant] = [
+var plantListInitVar: [Plant] = [
     Plant(
         name: "Lavande",
         imageName: "lavande",
@@ -116,4 +116,4 @@ var users = [Profile(username: "alice_garden", profilePic: "person.circle"),
              Profile(username: "clara_leaf", profilePic: "paintbrush.fill") ]
 
 
-var listPlant = PlantList()
+var plantListGlobalVar = PlantListClass()

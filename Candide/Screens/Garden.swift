@@ -8,7 +8,8 @@
 import SwiftUI
 
 struct Garden: View {
-    @ObservedObject var listPlants = listPlant
+    @ObservedObject var plantListLocalVar = plantListGlobalVar
+
     var body: some View {
 
         NavigationStack {
@@ -16,8 +17,8 @@ struct Garden: View {
                 Color.cGreen.ignoresSafeArea()
                 
                 ScrollView {
-                    ForEach(plants){ plant in
-                        GardenPlanteFrame(plant : plant)
+                    ForEach(plantListGlobalVar.plantList){ plant in
+                        GardenPlanteFrame(plant : plant, plantList: plantListLocalVar)
                     }.navigationTitle("Mon jardin")
                     
                 }.padding(.horizontal)
