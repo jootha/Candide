@@ -44,15 +44,15 @@ enum Filter: String {
 }
 
 //Structure de plantes
-struct Plant : Identifiable {
+class Plant : Identifiable, ObservableObject {
     var id = UUID()
-    var name: String
-    var imageName: String?
-    var soilType: SoilType
-    var watering: WateringFrequency
-    var sunlight: Sunlight
-    var isIndoor: Bool
-    var plantTask: [PlantTask]
+    @Published var name: String
+    @Published var imageName: String?
+    @Published var soilType: SoilType
+    @Published var watering: WateringFrequency
+    @Published var sunlight: Sunlight
+    @Published var isIndoor: Bool
+    @Published var plantTask: [PlantTask]
     
     init( name: String, imageName: String? = nil, soilType: SoilType, watering: WateringFrequency, sunlight: Sunlight, isIndoor: Bool, plantTask: [PlantTask]) {
         self.name = name
@@ -100,12 +100,6 @@ struct Profile: Identifiable {
     var id = UUID()
     var username: String
     var profilePic: String
-}
-
-struct Models: View {
-    var body: some View {
-        
-    }
 }
 
 class PlantListClass: ObservableObject {

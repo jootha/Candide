@@ -14,12 +14,12 @@ struct AddButton: View {
     var body: some View {
         
             NavigationLink {
-
+                
                 switch action {
                     case "post":
                         AddPostView()
                     default:
-                        AddPlantView()
+                    AddPostView()
                 }
 
             } label: {

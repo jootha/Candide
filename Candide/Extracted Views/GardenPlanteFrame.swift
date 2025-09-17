@@ -8,36 +8,44 @@
 import SwiftUI
 
 struct GardenPlanteFrame: View {
-    var plant: Plant
+    @ObservedObject var plant: Plant
     @ObservedObject var plantList: PlantListClass
 
     var body: some View {
         HStack {
             ZStack {
                 NavigationLink {
-                    AddPlantView()
+                    AddPlantView(plant: plant)
                 } label: {
-                    if let image = plant.imageName {
-                        Image(image)
-                            .resizable()
-                            .scaledToFit()
-                            .cornerRadius(16)
-                            .padding(-8)
-                            .overlay(alignment: .topTrailing) {
-                                TrashButton(plant: plant)
-                            }
-                    } else {
-                        Image("default")
-                            .resizable()
-                            .scaledToFit()
-                            .cornerRadius(16)
-                            .padding(-8)
-                            //.offset(x: -100, y: 50)
-                            .overlay(alignment: .topTrailing) {
-                                TrashButton(plant: plant, plantList: plantList)
-                            }
+                    VStack {
+                        if let image = plant.imageName {
+                            Image(image)
+                                .resizable()
+                                .scaledToFit()
+                                .cornerRadius(16)
+                                .padding(-8)
+                                .overlay(alignment: .topTrailing) {
+                                    TrashButton(plant: plant)
+                                }
+                        } else {
+                            Image("default")
+                                .resizable()
+                                .scaledToFit()
+                                .cornerRadius(16)
+                                .padding(-8)
+                                //.offset(x: -100, y: 50)
+                                .overlay(alignment: .topTrailing) {
+                                    TrashButton(
+                                        plant: plant,
+                                        plantList: plantList
+                                    )
+                                }
+                        }
+                        Text(plant.name).font(.system(size: 24)).bold()
+                            .foregroundColor(.cDarkBlue)
+
                     }
-                    //Text(plant.name).font(.system(size: 24)).bold()
+
                 }
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -48,5 +56,8 @@ struct GardenPlanteFrame: View {
 }
 
 #Preview {
-    GardenPlanteFrame(plant: plantListGlobalVar.plantList[0], plantList: plantListGlobalVar)
+    GardenPlanteFrame(
+        plant: plantListGlobalVar.plantList[2],
+        plantList: plantListGlobalVar
+    )
 }
