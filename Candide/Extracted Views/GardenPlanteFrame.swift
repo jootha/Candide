@@ -12,17 +12,31 @@ struct GardenPlanteFrame: View {
 
     var body: some View {
         HStack {
-            ZStack {  //Carte rose avec image
-                if(!plant.imageName.isEmpty){
-                    Image(plant.imageName)
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(16)
-                        .padding(-8)
-                        .shadow(radius: 5)
-                        .overlay(alignment: .topTrailing) {
-                            TrashButton(plant: plants[0])
-                        }
+            ZStack {
+                NavigationLink {
+                    AddPlantView()
+                } label: {
+                    if let image = plant.imageName {
+                        Image(image)
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(16)
+                            .padding(-8)
+                            .overlay(alignment: .topTrailing) {
+                                TrashButton(plant: plant)
+                            }
+                    } else {
+                        Image("default")
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(16)
+                            .padding(-8)
+                            //.offset(x: -100, y: 50)
+                            .overlay(alignment: .topTrailing) {
+                                TrashButton(plant: plant)
+                            }
+                    }
+                    //Text(plant.name).font(.system(size: 24)).bold()
                 }
             }
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -31,6 +45,7 @@ struct GardenPlanteFrame: View {
             .cornerRadius(16)
     }
 }
+
 #Preview {
-    GardenPlanteFrame(plant: plants[3])
+    GardenPlanteFrame(plant: plants[2])
 }

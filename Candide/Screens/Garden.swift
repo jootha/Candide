@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct Garden: View {
-    
+    @ObservedObject var listPlants = listPlant
     var body: some View {
 
         NavigationStack {

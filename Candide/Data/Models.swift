@@ -47,26 +47,14 @@ enum Filter: String {
 struct Plant : Identifiable {
     var id = UUID()
     var name: String
-    var imageName: String
+    var imageName: String?
     var soilType: SoilType
     var watering: WateringFrequency
     var sunlight: Sunlight
     var isIndoor: Bool
-    var plantTask: [Task]
+    var plantTask: [PlantTask]
     
-    init(id: UUID = UUID(), name: String, soilType: SoilType, watering: WateringFrequency, sunlight: Sunlight, isIndoor: Bool, plantTask: [Task]) {
-        self.id = id
-        self.name = name
-        self.imageName = ""
-        self.soilType = soilType
-        self.watering = watering
-        self.sunlight = sunlight
-        self.isIndoor = isIndoor
-        self.plantTask = plantTask
-    }
-    
-    init(id: UUID = UUID(), name: String, imageName: String, soilType: SoilType, watering: WateringFrequency, sunlight: Sunlight, isIndoor: Bool, plantTask: [Task]) {
-        self.id = id
+    init( name: String, imageName: String? = nil, soilType: SoilType, watering: WateringFrequency, sunlight: Sunlight, isIndoor: Bool, plantTask: [PlantTask]) {
         self.name = name
         self.imageName = imageName
         self.soilType = soilType
@@ -75,11 +63,10 @@ struct Plant : Identifiable {
         self.isIndoor = isIndoor
         self.plantTask = plantTask
     }
-    
 }
 
 //Structure de tâches
-struct Task: Identifiable {
+struct PlantTask: Identifiable {
     var id = UUID()
     var name: String
     var date: String
@@ -118,5 +105,13 @@ struct Profile: Identifiable {
 struct Models: View {
     var body: some View {
         
+    }
+}
+
+class PlantList: ObservableObject {
+    @Published var listPlants: [Plant]
+    
+    init(listPlants: [Plant] = plants) {
+        self.listPlants = listPlants
     }
 }

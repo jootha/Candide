@@ -19,7 +19,7 @@ struct AddButton: View {
                     case "post":
                         AddPostView()
                     default:
-                        AddPostView()
+                        AddPlantView()
                 }
 
             } label: {

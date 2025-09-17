@@ -58,10 +58,10 @@ var plants: [Plant] = [
         plantTask: [] ) ]
 
 //Liste des tâches
-var tasks: [Task] = [
-    Task(name: "Arroser", date: "26/01/2025", isDone: false),
-    Task(name: "Rajouter de l'engrais", date: "26/01/2025", isDone: true),
-    Task(name: "Tailler", date: "26/01/2025", isDone: false) ]
+var tasks: [PlantTask] = [
+    PlantTask(name: "Arroser", date: "26/01/2025", isDone: false),
+    PlantTask(name: "Rajouter de l'engrais", date: "26/01/2025", isDone: true),
+    PlantTask(name: "Tailler", date: "26/01/2025", isDone: false) ]
 
 //Liste des postes
 var posts: [Post] = [
@@ -114,3 +114,6 @@ var comments = [ Comment(
 var users = [Profile(username: "alice_garden", profilePic: "person.circle"),
              Profile(username: "bob_the_planter", profilePic: "hammer.fill"),
              Profile(username: "clara_leaf", profilePic: "paintbrush.fill") ]
+
+
+var listPlant = PlantList()
