@@ -19,6 +19,14 @@ var plantListInitVar: [Plant] = [
         plantTask: []
     ),
     Plant(
+        name: "Tomate",
+        soilType: .rich,
+        watering: .every2Days,
+        sunlight: .fullSun,
+        isIndoor: false,
+        plantTask: []
+    ),
+    Plant(
         name: "Aloe Vera",
         imageName: "aloevera",
         soilType: .cactusMix,
