@@ -11,16 +11,14 @@ struct TrashButton: View {
 
     @State var plant: Plant
     @ObservedObject var plantList = plantListGlobalVar
+    @State var showingAlert = false
+    
     //@State var presentAlert : Binding<Bool>
     
     var body: some View {
         Button {
-
-            plantList.printPlantListNames()
-            plantList.removePlant(plant)
-
+            showingAlert = true
             
-            plantList.printPlantListNames()
         } label: {
             ZStack {  //Bouton edit
                 Circle().frame(width: 30)
@@ -30,11 +28,19 @@ struct TrashButton: View {
                     .foregroundColor(.cOrange)
                     .font(.system(size: 15))
             }
-        }/*.alert(isPresented: $presentAlert) {
-            Alert(title: Text("Supprimer la plant ?"), message: Text("Etes vous sûr de vouloir supprimer la " + plant.name + " ?"), primaryButton: .default(Text("oui")), secondaryButton: .cancel(Text("non")))
-      }*/
+        }.alert(isPresented: $showingAlert) {
+            Alert(
+                title: Text("Supprimer !"),
+                message: Text("Etes-vous sûr de vouloir supprimer " + plant.name + " ?"),
+                primaryButton: .destructive(Text("Supprimer")) {
+                    plantList.removePlant(plant)
+                },
+                secondaryButton: .cancel(Text("Annuler"))
+            )
+        }
+      }
     }
-}
+
 
 #Preview {
     TrashButton(plant: plantListGlobalVar.plantList[2])
