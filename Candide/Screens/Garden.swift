@@ -9,18 +9,19 @@ import SwiftUI
 
 struct Garden: View {
     @ObservedObject var plantListLocalVar = plantListGlobalVar
+    @State var navPath = [Plant]()
 
     var body: some View {
 
-        NavigationStack {
+        NavigationStack(path: $navPath) {
             
             ZStack {
                 Color.cGreen.ignoresSafeArea()
                 
                 ScrollView {
                     ForEach(plantListGlobalVar.plantList){ plant in
-                        NavigationLink {
-                            AddPlantView(plant: plant)
+                        Button {
+                            navPath.append(plant)
                         } label: {
                             GardenPlanteFrame(plant : plant)
                         }
@@ -36,7 +37,11 @@ struct Garden: View {
                     }
                 }
                 
-            }.navigationBarTitleDisplayMode(.inline)
+            }
+            .navigationDestination(for: Plant.self){ plant in
+                PlantView(plant: plant, navPath: $navPath)
+            }
+            .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .principal) {
                         Text("Mon jardin")

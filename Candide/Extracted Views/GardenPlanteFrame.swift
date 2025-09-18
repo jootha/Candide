@@ -9,7 +9,7 @@ import SwiftUI
 
 struct GardenPlanteFrame: View {
     @ObservedObject var plant: Plant
-
+    
     var body: some View {
 
         ZStack {

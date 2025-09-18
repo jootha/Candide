@@ -35,16 +35,16 @@ enum Sunlight: String {
 //Enum de filtres de posts
 enum Filter: String {
     case interior = "Plantes d’intérieur"
-        case aromatic = "Plantes aromatiques"
-        case lowWater = "Faible arrosage"
-        case fullSun = "Plein soleil"
-        case airPurifier = "Plantes dépolluantes"
-        case beginnerFriendly = "Débutant"
-        case edible = "Plantes comestibles"
+    case aromatic = "Plantes aromatiques"
+    case lowWater = "Faible arrosage"
+    case fullSun = "Plein soleil"
+    case airPurifier = "Plantes dépolluantes"
+    case beginnerFriendly = "Débutant"
+    case edible = "Plantes comestibles"
 }
 
 //Structure de plantes
-class Plant : Identifiable, ObservableObject {
+class Plant: Identifiable, ObservableObject, Hashable {
     var id = UUID()
     @Published var name: String
     @Published var imageName: String?
@@ -53,8 +53,16 @@ class Plant : Identifiable, ObservableObject {
     @Published var sunlight: Sunlight
     @Published var isIndoor: Bool
     @Published var plantTask: [PlantTask]
-    
-    init( name: String, imageName: String? = nil, soilType: SoilType, watering: WateringFrequency, sunlight: Sunlight, isIndoor: Bool, plantTask: [PlantTask]) {
+
+    init(
+        name: String,
+        imageName: String? = nil,
+        soilType: SoilType,
+        watering: WateringFrequency,
+        sunlight: Sunlight,
+        isIndoor: Bool,
+        plantTask: [PlantTask]
+    ) {
         self.name = name
         self.imageName = imageName
         self.soilType = soilType
@@ -62,6 +70,14 @@ class Plant : Identifiable, ObservableObject {
         self.sunlight = sunlight
         self.isIndoor = isIndoor
         self.plantTask = plantTask
+    }
+
+    static func == (lhs: Plant, rhs: Plant) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
@@ -105,11 +121,11 @@ struct Profile: Identifiable {
 
 class PlantListClass: ObservableObject {
     @Published var plantList: [Plant]
-    
+
     init(listPlants: [Plant] = plantListInitVar) {
         self.plantList = listPlants
     }
-    
+
     func printPlantListNames() {
         print("Printing plant list: [")
         for plant in plantList {
@@ -117,12 +133,11 @@ class PlantListClass: ObservableObject {
         }
         print("]")
     }
-    func removePlant(_ plant : Plant){
+    func removePlant(_ plant: Plant) {
         if let index = plantList.firstIndex(where: { $0.id == plant.id }) {
             plantList.remove(at: index)
         }
         print("plant removed : \(plant.name)")
     }
-    
-    
+
 }

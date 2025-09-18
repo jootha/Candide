@@ -11,9 +11,11 @@ struct TrashButton: View {
 
     @State var plant: Plant
     @ObservedObject var plantList = plantListGlobalVar
+    //@State var presentAlert : Binding<Bool>
     
     var body: some View {
         Button {
+
             plantList.printPlantListNames()
             plantList.removePlant(plant)
 
@@ -28,7 +30,9 @@ struct TrashButton: View {
                     .foregroundColor(.cOrange)
                     .font(.system(size: 15))
             }
-        }
+        }/*.alert(isPresented: $presentAlert) {
+            Alert(title: Text("Supprimer la plant ?"), message: Text("Etes vous sûr de vouloir supprimer la " + plant.name + " ?"), primaryButton: .default(Text("oui")), secondaryButton: .cancel(Text("non")))
+      }*/
     }
 }
 
