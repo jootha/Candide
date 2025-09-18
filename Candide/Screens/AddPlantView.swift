@@ -12,7 +12,7 @@ struct AddPlantView: View {
     
     var body: some View {
         Text("Vue PLant")
-        TextField("User name (email address)", text: $plant.name)
+        TextField("Comment s'appelle ta plante ?", text: $plant.name)
         
         Text(plant.name)
     }

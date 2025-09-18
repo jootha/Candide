@@ -71,6 +71,7 @@ struct PlantTask: Identifiable {
     var name: String
     var date: String
     var isDone: Bool
+    var plantID: UUID
 }
 
 //Structure de posts

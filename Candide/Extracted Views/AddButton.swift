@@ -19,18 +19,18 @@ struct AddButton: View {
                     case "post":
                         AddPostView()
                     default:
-                    AddPostView()
+                    AddPlantView(plant: defaultPlant)
                 }
 
             } label: {
 
                 Label("Plus", systemImage: "plus")
                     .labelStyle(.iconOnly)
-                    .padding(8)
+                    .padding(16)
                     .background(.cDarkBlue)
-                    .foregroundStyle(.cPink)
-                    .cornerRadius(128)
-                    .font(.system(size: 64))
+                    .foregroundStyle(.cOrange)
+                    .cornerRadius(32)
+                    .font(.system(size: 32))
                     .bold()
                 }
                 

@@ -13,16 +13,40 @@ struct Garden: View {
     var body: some View {
 
         NavigationStack {
+            
             ZStack {
                 Color.cGreen.ignoresSafeArea()
                 
                 ScrollView {
                     ForEach(plantListGlobalVar.plantList){ plant in
-                        GardenPlanteFrame(plant : plant, plantList: plantListLocalVar)
-                    }.navigationTitle("Mon jardin")
-                    
+                        NavigationLink {
+                            AddPlantView(plant: plant)
+                        } label: {
+                            GardenPlanteFrame(plant : plant)
+                        }
+                    }.padding(.vertical)
                 }.padding(.horizontal)
-            }
+                
+                VStack {
+                    Spacer()
+                    HStack{
+                        Spacer()
+                        AddButton(action: "garden")
+                            .padding()
+                    }
+                }
+                
+            }.navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Mon jardin")
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(.white)
+                    }
+                }
+        .toolbarBackground(.cDarkBlue, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
         }
         
     }

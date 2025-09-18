@@ -9,55 +9,52 @@ import SwiftUI
 
 struct GardenPlanteFrame: View {
     @ObservedObject var plant: Plant
-    @ObservedObject var plantList: PlantListClass
 
     var body: some View {
-        HStack {
-            ZStack {
-                NavigationLink {
-                    AddPlantView(plant: plant)
-                } label: {
-                    VStack {
-                        if let image = plant.imageName {
-                            Image(image)
-                                .resizable()
-                                .scaledToFit()
-                                .cornerRadius(16)
-                                .padding(-8)
-                                .overlay(alignment: .topTrailing) {
-                                    TrashButton(plant: plant)
-                                }
-                        } else {
-                            Image("default")
-                                .resizable()
-                                .scaledToFit()
-                                .cornerRadius(16)
-                                .padding(-8)
-                                //.offset(x: -100, y: 50)
-                                .overlay(alignment: .topTrailing) {
-                                    TrashButton(
-                                        plant: plant,
-                                        plantList: plantList
-                                    )
-                                }
-                        }
-                        Text(plant.name).font(.system(size: 24)).bold()
-                            .foregroundColor(.cDarkBlue)
 
+        ZStack {
+            if let image = plant.imageName {
+                Image(image)
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(16)
+                    .padding(-8)
+                    .overlay(alignment: .topTrailing) {
+                        TrashButton(plant: plant)
                     }
-
-                }
+            } else {
+                Image("default")
+                    .resizable()
+                    .scaledToFit()
+                    .cornerRadius(16)
+                    .padding(-8)
+                    //.offset(x: -100, y: 50)
+                    .overlay(alignment: .topTrailing) {
+                        TrashButton(
+                            plant: plant
+                        )
+                    }
             }
+            HStack {
+                VStack {
+                    Text(plant.name).font(.system(size: 16)).bold()
+                        .foregroundStyle(.cDarkBlue)
+                        .padding()
+                        .background(Color.white.opacity(0.8))
+                        .cornerRadius(16)
+                    Spacer()
+                }
+                Spacer()
+            }
+
         }.frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding()
             .background(Color.cYellow)
             .cornerRadius(16)
+
     }
 }
 
 #Preview {
-    GardenPlanteFrame(
-        plant: plantListGlobalVar.plantList[2],
-        plantList: plantListGlobalVar
-    )
+    GardenPlanteFrame(plant: plantListGlobalVar.plantList[1])
 }
