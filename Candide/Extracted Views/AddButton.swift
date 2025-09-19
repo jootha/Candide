@@ -18,8 +18,10 @@ struct AddButton: View {
                 switch action {
                     case "post":
                         AddPostView()
-                case "Garden" :
-                    AddPlantView(plant: defaultPlant)
+                    
+                    case "task":
+                        AddTaskView()
+                    
                     default:
                         AddPlantView(plant: defaultPlant)
                 }

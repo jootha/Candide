@@ -8,7 +8,7 @@
 import SwiftUI
 
 //Enums de la structure de plantes
-enum SoilType: String {
+enum SoilType: String, CaseIterable, Hashable  {
     case wellDrained = "Bien drainé"
     case sandy = "Sableux"
     case rich = "Riche et humide"
@@ -17,7 +17,7 @@ enum SoilType: String {
     case cactusMix = "Cactus"
 }
 
-enum WateringFrequency: String {
+enum WateringFrequency: String, CaseIterable, Hashable {
     case daily = "Tous les jours"
     case every2Days = "Tous les 2 jours"
     case weekly = "1 fois par semaine"
@@ -25,7 +25,7 @@ enum WateringFrequency: String {
     case every10Days = "Tous les 10 jours"
 }
 
-enum Sunlight: String {
+enum Sunlight: String, CaseIterable, Hashable {
     case fullSun = "Plein soleil"
     case indirectLight = "Lumière indirecte"
     case mediumLight = "Lumière moyenne"
@@ -35,12 +35,12 @@ enum Sunlight: String {
 //Enum de filtres de posts
 enum Filter: String {
     case interior = "Plantes d’intérieur"
-        case aromatic = "Plantes aromatiques"
-        case lowWater = "Faible arrosage"
-        case fullSun = "Plein soleil"
-        case airPurifier = "Plantes dépolluantes"
-        case beginnerFriendly = "Débutant"
-        case edible = "Plantes comestibles"
+    case aromatic = "Plantes aromatiques"
+    case lowWater = "Faible arrosage"
+    case fullSun = "Plein soleil"
+    case airPurifier = "Plantes dépolluantes"
+    case beginnerFriendly = "Débutant"
+    case edible = "Plantes comestibles"
 }
 
 //Structure de plantes

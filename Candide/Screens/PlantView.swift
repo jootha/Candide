@@ -9,31 +9,54 @@ import SwiftUI
 
 struct PlantView: View {
     
-    var plant: Plant
+    @ObservedObject var plant: Plant
     @ObservedObject var plantList = plantListGlobalVar
     @Binding var navPath: [Plant]
+    @State var task: [PlantTask] = tasks
+    @State var showingAlert = false
+    @State var showingEditView = false
 
     var body: some View {
+        
+        ZStack {
+            
+            Color.cGreen.ignoresSafeArea()
+            
+            VStack {
+                
+                //  IMAGE
+                if let image = plant.imageName {
+                    Image(image)
+                        .resizable()
+                        .frame(maxWidth: .infinity, maxHeight: 256)
+                    
+                } else {
+                    Image("default")
+                        .resizable()
+                }
 
-            ZStack {
+                
+                //  MODIF PLANT
+                Button {
+                    showingEditView.toggle()
+                } label: {
+                    Image(systemName: "pencil.circle")
+                        .font(.title)
+                }
+                .sheet(isPresented: $showingEditView) {
+                    EditPlantView(plant: plant)
+                }
+                .offset(x: 160, y: -235)
+                .zIndex(2)
 
-                Color.cDarkBlue.ignoresSafeArea()
-
-                Rectangle().foregroundStyle(.cGreen)
 
                 VStack {
-
-//                  IMAGE
-                    if let image = plant.imageName {
-                        Image(image).resizable()
-                    } else {
-                        Image("default").resizable()
-                    }
-
+                    
+                    //  INFORMATIONS
                     VStack {
-//                      INFORMATIONS
+                        
                         HStack {
-
+                            
                             Text("Informations: ")
                                 .padding(10)
                                 .font(.subheadline)
@@ -41,13 +64,14 @@ struct PlantView: View {
                                 .cornerRadius(16)
                                 .padding(.horizontal, 30)
                                 .shadow(radius: 2)
-
+                            
                             Spacer()
-
+                            
                         }
-
+                        
                         ScrollView(showsIndicators: false) {
                             VStack {
+                                
                                 PlantRowInfo(
                                     plantValue: "\(plant.sunlight.rawValue)",
                                     plantText: "Ensoleillement",
@@ -65,17 +89,23 @@ struct PlantView: View {
                                     plantText: "Type de sol",
                                     plantIco: "🪴"
                                 )
-
+                                
                             }
                             .padding(.vertical, 8)
                             .background(.cYellow)
-
+                            .cornerRadius(10)
                         }
+                        .frame(maxWidth: .infinity, minHeight: 192)
                         .padding(.horizontal,30)
                         
-//                      ALERTES PLANT
+                    }
+                    
+                    
+                    //  TASK PLANT
+                    VStack {
+                        
                         HStack {
-
+                            
                             Text("Alertes: ")
                                 .padding(10)
                                 .font(.subheadline)
@@ -83,58 +113,73 @@ struct PlantView: View {
                                 .cornerRadius(16)
                                 .padding(.horizontal, 30)
                                 .shadow(radius: 2)
-
+                            
                             Spacer()
-
-                        }
-
-                        ScrollView (showsIndicators: false){
+                            
+                            AddButton(action: "task").offset(x: -24, y: 32)
+                            
+                        }.zIndex(2)
+                        
+                        
+                        ScrollView (showsIndicators: false) {
                             ForEach (tasks.indices, id: \.self) { index in
-                                //ProgramRow(task: tasks[index], plant: plantListGlobalVar.plantList[index])
-                            } .padding(.vertical,8)
-                            
-                        }
-                        .padding(.horizontal,30)
-
-//                      BUTTONS
-                        VStack {
-                            
-//                          MODIF PLANT
-                            Button {
-                                
-                            } label: {
-                                ZStack {
-                                    Text("Modifier une plante")
-                                        .foregroundColor(.white)
+                                if plant.id == task[index].plantID {
+                                    PlantRowAlert(task: $task[index])
                                 }
                             }
-                            
-    //                      REMOVE PLANT
-                            Button {
+                            .zIndex(0)
+                            .padding(.vertical, 8)
+                            .background(.cYellow)
+                            .cornerRadius(10)
+                        }
+                        .frame(minHeight: 64)
+                        .padding(.horizontal,30)
+                        
+                    }
+                    
+                    
+                    //  DELETE PLANT
+                    Button {
+                        showingAlert = true
+                    } label: {
+                        ZStack {
+                            Text("Supprimer une plante")
+                                .foregroundColor(.cOrange)
+                                .padding(16)
+                                .background(.cDarkBlue)
+                                .cornerRadius(10)
+                        }
+                    }
+                    .alert(isPresented: $showingAlert) {
+                        Alert(
+                            title: Text("Achtung!"),
+                            message: Text("Etes-vous sûr de sûr de vouloir supprimer cette petite plante toute choupinou ?"),
+                            primaryButton: .destructive(Text("Supprimer")) {
                                 navPath.removeAll()
                                 plantList.removePlant(plant)
-                            } label: {
-                                ZStack {
-                                    Text("Supprimer une plante")
-                                        .foregroundColor(.cOrange)
-                                }
-                            }
-
-                        }
-
+                            },
+                            secondaryButton: .cancel(Text("Annuler"))
+                        )
                     }
+                    
                 }
                 
             }
-//            .navigationTitle(plant.name)
-
-//                            .background(Color.cYellow)
-//                            .cornerRadius(10)
+            
         }
-//    }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text(plant.name)
+                    .font(.title)
+                    .bold()
+                    .foregroundColor(.white)
+            }
+        }
+        .toolbarBackground(.cDarkBlue, for: .navigationBar)
+        .toolbarBackground(.visible, for: .navigationBar)
+        
+    }
 }
 
-#Preview {
-        PlantView(plant: plantListGlobalVar.plantList[0], navPath: .constant([]))
-//    PlantView(plant: plantListGlobalVar.plantList[1], navPath: <#Binding<[Plant]>#>)
-}
+#Preview { PlantView(plant: plantListGlobalVar.plantList[0], navPath: .constant([])) }

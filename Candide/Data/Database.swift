@@ -157,7 +157,7 @@ var users = [
 
 var plantListGlobalVar = PlantListClass()
 
-let defaultPlant = Plant(
+var defaultPlant = Plant(
     name: "",
     soilType: .wellDrained,  // premier de SoilType
     watering: .daily,  // premier de WateringFrequency

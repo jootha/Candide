@@ -8,11 +8,11 @@
 import SwiftUI
 
 struct PlantRowInfo: View {
-
+    
     var plantValue: String
     var plantText: String
     var plantIco: String
-
+    
     var body: some View {
         
         HStack {
@@ -30,6 +30,4 @@ struct PlantRowInfo: View {
     
 }
 
-#Preview {
-    PlantRowInfo(plantValue: "0", plantText: "toto", plantIco: "plus" )
-}
+#Preview { PlantRowInfo(plantValue: "0", plantText: "toto", plantIco: "plus" ) }
