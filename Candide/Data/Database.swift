@@ -82,25 +82,10 @@ let romarinID = plantListInitVar.first(where: { $0.name == "Romarin" })?.id
 
 //Liste des tâches
 var tasks: [PlantTask] = [
-    PlantTask(
-        name: "Arroser",
-        date: "26/01/2025",
-        isDone: false,
-        plantID: lavandeID!
-    ),
-    PlantTask(
-        name: "Rajouter de l'engrais",
-        date: "26/01/2025",
-        isDone: true,
-        plantID: aloeveraID!
-    ),
-    PlantTask(
-        name: "Tailler",
-        date: "26/01/2025",
-        isDone: false,
-        plantID: ficusID!
-    ),
-]
+    PlantTask(name: "Arroser", date: "26/01/2025", isDone: false,plantID: lavandeID!),
+    PlantTask(name: "Rajouter de l'engrais", date: "26/01/2025", isDone: true, plantID: aloeveraID!),
+    PlantTask(name: "Tailler", date: "26/01/2025", isDone: false, plantID: ficusID!) ]
+
 
 //Liste des postes
 var posts: [Post] = [
@@ -109,35 +94,36 @@ var posts: [Post] = [
         image: "plant.fill",
         contentText: "L'arrosage est crucial pour la santé de vos plantes...",
         description: "Conseils d’arrosage pour plantes d’intérieur",
-        author: users[3],
+        author: users[0],
         date: "26/01/2025",
         nbLike: 42,
         filter: .beginnerFriendly,
-        comments: comments[2]
+        comments: comments[2],
+        category: .plantes
     ),
     Post(
         title: "DIY : Construire une jardinière en bois",
         image: "hammer.fill",
-        contentText:
-            "Voici comment construire une belle jardinière en quelques étapes...",
+        contentText: "Voici comment construire une belle jardinière en quelques étapes...",
         description: "Tutoriel pour fabriquer une jardinière simple",
         author: users[2],
         date: "26/01/2025",
         nbLike: 29,
         filter: .beginnerFriendly,
-        comments: comments[0]
+        comments: comments[0],
+        category: .engrais
     ),
     Post(
         title: "Les meilleures plantes dépolluantes",
         image: "leaf.fill",
-        contentText:
-            "Certaines plantes peuvent améliorer la qualité de l'air chez vous...",
+        contentText: "Certaines plantes peuvent améliorer la qualité de l'air chez vous...",
         description: "Top 5 des plantes purificatrices",
         author: users[1],
         date: "26/01/2025",
         nbLike: 78,
         filter: .airPurifier,
-        comments: comments[2]
+        comments: comments[2],
+        category: .medecine
     ),
 ]
 

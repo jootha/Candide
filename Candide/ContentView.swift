@@ -35,8 +35,8 @@ struct ContentView: View {
                         Text("Programme")
                         Image(systemName: "calendar.circle.fill")
                     }
-
-                AddPostView()
+                
+                ForumView()
                     .tabItem {
                         Text("Forum")
                         Image(systemName: "message.circle.fill")

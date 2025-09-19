@@ -35,12 +35,12 @@ enum Sunlight: String {
 //Enum de filtres de posts
 enum Filter: String {
     case interior = "Plantes d’intérieur"
-    case aromatic = "Plantes aromatiques"
-    case lowWater = "Faible arrosage"
-    case fullSun = "Plein soleil"
-    case airPurifier = "Plantes dépolluantes"
-    case beginnerFriendly = "Débutant"
-    case edible = "Plantes comestibles"
+        case aromatic = "Plantes aromatiques"
+        case lowWater = "Faible arrosage"
+        case fullSun = "Plein soleil"
+        case airPurifier = "Plantes dépolluantes"
+        case beginnerFriendly = "Débutant"
+        case edible = "Plantes comestibles"
 }
 
 //Structure de plantes
@@ -90,7 +90,15 @@ struct PlantTask: Identifiable {
     var plantID: UUID
 }
 
-//Structure de posts
+// Tags de forum
+enum PostCategory: String, CaseIterable, Hashable {
+    case plantes = "Plantes"
+    case medecine = "medecine"
+    case consommable = "consommable"
+    case engrais = "engrais"
+}
+
+// Structure de posts
 struct Post: Identifiable {
     var id = UUID()
     var title: String
@@ -102,7 +110,9 @@ struct Post: Identifiable {
     var nbLike: Int
     var filter: Filter
     var comments: Comment
+    var category: PostCategory
 }
+
 
 //Structure de commentaires
 struct Comment: Identifiable {
@@ -121,11 +131,11 @@ struct Profile: Identifiable {
 
 class PlantListClass: ObservableObject {
     @Published var plantList: [Plant]
-
+    
     init(listPlants: [Plant] = plantListInitVar) {
         self.plantList = listPlants
     }
-
+    
     func printPlantListNames() {
         print("Printing plant list: [")
         for plant in plantList {
@@ -133,11 +143,12 @@ class PlantListClass: ObservableObject {
         }
         print("]")
     }
-    func removePlant(_ plant: Plant) {
+    func removePlant(_ plant : Plant){
         if let index = plantList.firstIndex(where: { $0.id == plant.id }) {
             plantList.remove(at: index)
         }
         print("plant removed : \(plant.name)")
     }
-
+    
+    
 }
