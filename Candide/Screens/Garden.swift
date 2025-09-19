@@ -43,8 +43,18 @@ struct Garden: View {
                     Spacer()
                     HStack {
                         Spacer()
-                        AddButton(action: "garden")
-                            .padding()
+                        NavigationLink {
+                            CameraScreen()
+                        }label :{
+                            Label("Plus", systemImage: "photo")
+                                .labelStyle(.iconOnly)
+                                .padding(16)
+                                .background(.cDarkBlue)
+                                .foregroundStyle(.cOrange)
+                                .cornerRadius(32)
+                                .font(.system(size: 32))
+                                .bold()
+                        }
                     }
                 }
 

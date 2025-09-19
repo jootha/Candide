@@ -12,34 +12,34 @@ struct AddButton: View {
     @State var taptap = false
 
     var body: some View {
-        
-            NavigationLink {
-                
-                switch action {
-                    case "post":
-                        AddPostView()
-                    
-                    case "task":
-                        AddTaskView()
-                    
-                    default:
-                        AddPlantView(plant: defaultPlant)
-                }
 
-            } label: {
+        NavigationLink {
 
-                Label("Plus", systemImage: "plus")
-                    .labelStyle(.iconOnly)
-                    .padding(16)
-                    .background(.cDarkBlue)
-                    .foregroundStyle(.cOrange)
-                    .cornerRadius(32)
-                    .font(.system(size: 32))
-                    .bold()
-                }
+            switch action {
+            case "post":
+                AddPostView()
+
+            case "task":
+                AddTaskView()
                 
+            default :
+                AddPlantView(plant: defaultPlant)
             }
-    
+
+        } label: {
+
+            Label("Plus", systemImage: "plus")
+                .labelStyle(.iconOnly)
+                .padding(16)
+                .background(.cDarkBlue)
+                .foregroundStyle(.cOrange)
+                .cornerRadius(32)
+                .font(.system(size: 32))
+                .bold()
+        }
+
+    }
+
 }
 
 #Preview {

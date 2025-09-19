@@ -15,6 +15,7 @@ struct PlantView: View {
     @State var task: [PlantTask] = tasks
     @State var showingAlert = false
     @State var showingEditView = false
+    
 
     var body: some View {
         
