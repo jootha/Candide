@@ -10,6 +10,9 @@ import SwiftUI
 struct Program: View {
     
     @State var task: [PlantTask] = tasks
+    @State var selectedDate: Date = Date()
+    var filteredTasks: [PlantTask] { tasks.filter { $0.date == selectedDate.formatted(date: .numeric, time: .omitted) }
+        }
     
     var body: some View {
         NavigationStack {
@@ -18,12 +21,10 @@ struct Program: View {
                     .ignoresSafeArea()
                 VStack {
                     //  Date et tâches
-                    Text("26/01/2025")
-                        .foregroundStyle(.white)
-                        .padding()
+                    DateNavigationView(selectedDate: $selectedDate)
                         .background(Color.white.opacity(0.2))
                         .cornerRadius(16)
-                        .padding(.vertical)
+                        .padding()
                     
                     HStack {
                         Text("Mes tâches")
@@ -32,6 +33,7 @@ struct Program: View {
                             .background(Color.cYellow)
                             .cornerRadius(16)
                             .shadow(radius:2)
+                            .padding(.horizontal)
                         Spacer()
                     }
                     ZStack(alignment: .topLeading) {
@@ -45,13 +47,17 @@ struct Program: View {
                         .padding(.top)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         
-                        //     Liste des tasks
-                        ScrollView (showsIndicators: false){
-                            
-                            ForEach($task.indices, id: \.self) { index in
-                                    let task = tasks[index]
-                                    if let plant = plantListGlobalVar.plantList.first(where: { $0.id == task.plantID }) {
-                                        ProgramRow(task: $task[index], plant: plant)
+                        if filteredTasks.isEmpty {
+                            Text("Rien à faire pour aujourd’hui !")
+                                .foregroundColor(.white)
+                                .padding()
+                        } else {
+                            //     Liste des tasks
+                            ScrollView (showsIndicators: false){
+                                ForEach(tasks.indices, id: \.self) { taskIndex in
+                                    if tasks[taskIndex].date == selectedDate.formatted(date: .numeric, time: .omitted),
+                                    let plant = plantListGlobalVar.plantList.first(where: { $0.id == tasks[taskIndex].plantID }) {
+                                        ProgramRow(task: $task[taskIndex], plant: plant)
                                     }
                                 }
                             }
@@ -59,23 +65,26 @@ struct Program: View {
                         
                     } .padding(.horizontal,30)
                 }
-            //            Nav Bar
-                        .navigationBarTitleDisplayMode(.inline)
-                                .toolbar {
-                                    ToolbarItem(placement: .principal) {
-                                        Text("Programme")
-                                            .font(.title)
-                                            .bold()
-                                            .foregroundColor(.white)
-                                    }
-                                }
-                        .toolbarBackground(.cDarkBlue, for: .navigationBar)
-                        .toolbarBackground(.visible, for: .navigationBar)
+                //            Nav Bar
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .principal) {
+                        Text("Programme")
+                            .font(.title)
+                            .bold()
+                            .foregroundColor(.white)
+                    }
+                }
+                .toolbarBackground(.cDarkBlue, for: .navigationBar)
+                .toolbarBackground(.visible, for: .navigationBar)
             }
+            
         }
     }
-    
-
-#Preview {
-    Program()
 }
+    
+    
+    #Preview {
+        Program()
+    }
+

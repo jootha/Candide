@@ -12,6 +12,7 @@ struct ProgramRow: View {
     @Binding var task: PlantTask
         var plant: Plant
     
+    
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
             
@@ -24,7 +25,9 @@ struct ProgramRow: View {
                     Text(task.name)
                     Spacer()
                     Button {
-                        task.isDone.toggle()
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            task.isDone.toggle()
+                        }
                     } label: {
                         ZStack {
                             Image(systemName:"circle.fill")
@@ -46,6 +49,7 @@ struct ProgramRow: View {
                             .cornerRadius(16)
                             .padding()
                             .shadow(radius:5)
+                            
                     
                 } else {
                     Image("default")
@@ -61,9 +65,10 @@ struct ProgramRow: View {
                 .background(Color.cYellow)
                 .cornerRadius(10)
         } .padding(.vertical,8)
-            Spacer()
-        
+
+            
                 
+            
             }
         }
 

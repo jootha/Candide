@@ -82,9 +82,11 @@ let romarinID = plantListInitVar.first(where: { $0.name == "Romarin" })?.id
 
 //Liste des tâches
 var tasks: [PlantTask] = [
-    PlantTask(name: "Arroser", date: "26/01/2025", isDone: false,plantID: lavandeID!),
-    PlantTask(name: "Rajouter de l'engrais", date: "26/01/2025", isDone: true, plantID: aloeveraID!),
-    PlantTask(name: "Tailler", date: "26/01/2025", isDone: false, plantID: ficusID!) ]
+    PlantTask(name: "Arroser", date: "26/09/2025", isDone: false,plantID: lavandeID!),
+    PlantTask(name: "Rajouter de l'engrais", date: "26/09/2025", isDone: true, plantID: aloeveraID!),
+    PlantTask(name: "Tailler", date: "26/09/2025", isDone: false, plantID: ficusID!) ]
+
+
 
 
 //Liste des postes
