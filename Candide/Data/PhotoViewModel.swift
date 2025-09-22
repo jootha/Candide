@@ -1,7 +1,7 @@
-import Foundation
+import SwiftUI
 
 class PhotoViewModel: ObservableObject, CameraManagerDelegate {
-    @Published var photos: [String] = []
+    @Published var photos: [UIImage] = []
     let cameraManager = CameraManager()
 
     init() {
@@ -12,10 +12,10 @@ class PhotoViewModel: ObservableObject, CameraManagerDelegate {
         cameraManager.capturePhoto()
     }
 
-    // Delegate appelé par CameraManager
-    func didCapturePhoto(named fileName: String) {
+    // Delegate appelé quand CameraManager capture une photo
+    func didCapturePhoto(_ image: UIImage) {
         DispatchQueue.main.async {
-            self.photos.append(fileName)
+            self.photos.append(image)
         }
     }
 }

@@ -2,7 +2,7 @@ import AVFoundation
 import UIKit
 
 protocol CameraManagerDelegate: AnyObject {
-    func didCapturePhoto(named fileName: String)
+    func didCapturePhoto(_ image: UIImage)
 }
 
 class CameraManager: NSObject, ObservableObject {
@@ -21,7 +21,6 @@ class CameraManager: NSObject, ObservableObject {
         session.beginConfiguration()
         session.sessionPreset = .photo
 
-        // Choisir la caméra arrière
         guard let device = AVCaptureDevice.default(.builtInWideAngleCamera,
                                                    for: .video,
                                                    position: .back) else { return }
@@ -31,12 +30,13 @@ class CameraManager: NSObject, ObservableObject {
         if session.canAddOutput(output) { session.addOutput(output) }
 
         session.commitConfiguration()
-
         let layer = AVCaptureVideoPreviewLayer(session: session)
         layer.videoGravity = .resizeAspectFill
         previewLayer = layer
 
         session.startRunning()
+        print("Session running: \(session.isRunning)")
+
     }
 
     func capturePhoto() {
@@ -50,16 +50,9 @@ extension CameraManager: AVCapturePhotoCaptureDelegate {
                      didFinishProcessingPhoto photo: AVCapturePhoto,
                      error: Error?) {
         guard error == nil else { return }
-
-        if let data = photo.fileDataRepresentation() {
-            // Sauvegarder l’image dans Documents
-            let fileName = "photo_\(UUID().uuidString.prefix(6)).jpg"
-            let url = FileManager.default.urls(for: .documentDirectory,
-                                               in: .userDomainMask)[0].appendingPathComponent(fileName)
-            try? data.write(to: url)
-
-            // Notifier le delegate
-            delegate?.didCapturePhoto(named: fileName)
+        if let data = photo.fileDataRepresentation(),
+           let image = UIImage(data: data) {
+            delegate?.didCapturePhoto(image)
         }
     }
 }

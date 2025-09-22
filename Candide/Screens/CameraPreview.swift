@@ -9,6 +9,8 @@ struct CameraPreview: UIViewRepresentable {
         if let layer = layer {
             layer.frame = UIScreen.main.bounds
             view.layer.addSublayer(layer)
+            print("=== Dans mon layer")
+            print(view.layer)
         }
         return view
     }
@@ -46,10 +48,20 @@ struct CameraScreen: View {
                 }
 
                 // Liste des photos capturées
-                List(viewModel.photos, id: \.self) { name in
-                    Text(name)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(viewModel.photos.indices, id: \.self) { index in
+                            Image(uiImage: viewModel.photos[index])
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 100, height: 100)
+                                .clipped()
+                                .cornerRadius(12)
+                        }
+                    }
+                    .padding()
                 }
-                .frame(height: 200)
+                .background(Color.black.opacity(0.3))
             }
         }
     }
