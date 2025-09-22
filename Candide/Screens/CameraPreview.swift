@@ -16,7 +16,8 @@ struct CameraPreview: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
-        if let layer = layer {
+        print("updateuiview : " + (layerLocalVar?.videoGravity.rawValue)!)
+        
             layer.frame = uiView.bounds
         }
     }
