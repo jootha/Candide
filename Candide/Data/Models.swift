@@ -2,12 +2,11 @@
 //  Models.swift
 //  LeaDEMOexo
 //
-//  Created by apprenant95 on 15/09/2025.
+//  Fusion des deux versions du 15/09/2025
 //
 
 import SwiftUI
 
-//Enums de la structure de plantes
 enum SoilType: String, CaseIterable, Hashable  {
     case wellDrained = "Bien drainé"
     case sandy = "Sableux"
@@ -32,7 +31,6 @@ enum Sunlight: String, CaseIterable, Hashable {
     case shade = "Ombre"
 }
 
-//Enum de filtres de posts
 enum Filter: String, CaseIterable, Hashable {
     case interior = "Plantes d’intérieur"
     case aromatic = "Plantes aromatiques"
@@ -43,7 +41,6 @@ enum Filter: String, CaseIterable, Hashable {
     case edible = "Plantes comestibles"
 }
 
-//Enum de la répétition de la tâche
 enum RepeatInterval: String, CaseIterable, Hashable {
     case none = "Aucune"
     case daily = "Tous les jours"
@@ -53,7 +50,6 @@ enum RepeatInterval: String, CaseIterable, Hashable {
     case every10Days = "Tous les 10 jours"
 }
 
-//  Structure de posts
 struct Post: Identifiable {
     var id = UUID()
     var title: String
@@ -64,10 +60,9 @@ struct Post: Identifiable {
     var date: String
     var nbLike: Int
     var filter: Filter
-    var comments: Comment
+    var comments: [Comment]
 }
 
-//  Structure de commentaires
 struct Comment: Identifiable {
     var id = UUID()
     var commentText: String
@@ -75,14 +70,12 @@ struct Comment: Identifiable {
     var author: Profile
 }
 
-//  Structure de profil utilisateur
 struct Profile: Identifiable {
     var id = UUID()
     var username: String
     var profilePic: String
 }
 
-//  Classe de plantes
 class Plant: Identifiable, ObservableObject, Hashable {
     var id = UUID()
     @Published var name: String
@@ -117,7 +110,6 @@ class Plant: Identifiable, ObservableObject, Hashable {
     }
 }
 
-//  Classe de tâches
 class PlantTask: Identifiable, ObservableObject, Hashable {
     var id = UUID()
     @Published var name: String
@@ -147,25 +139,18 @@ class PlantTask: Identifiable, ObservableObject, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
-//    Fonction pour que la tâche se répète
+
     func nextDate() -> Date? {
-            guard let currentDate = taskDateFormatter.date(from: self.date) else { return nil }
-            
-            switch repeatInterval {
-            case .daily:
-                return Calendar.current.date(byAdding: .day, value: 1, to: currentDate)
-            case .every2Days:
-                return Calendar.current.date(byAdding: .day, value: 2, to: currentDate)
-            case .weekly:
-                return Calendar.current.date(byAdding: .day, value: 7, to: currentDate)
-            case .biweekly:
-                return Calendar.current.date(byAdding: .day, value: 14, to: currentDate)
-            case .every10Days:
-                return Calendar.current.date(byAdding: .day, value: 10, to: currentDate)
-            case .none:
-                return nil
-            }
+        guard let currentDate = taskDateFormatter.date(from: self.date) else { return nil }
+        switch repeatInterval {
+        case .daily:       return Calendar.current.date(byAdding: .day, value: 1,  to: currentDate)
+        case .every2Days:  return Calendar.current.date(byAdding: .day, value: 2,  to: currentDate)
+        case .weekly:      return Calendar.current.date(byAdding: .day, value: 7,  to: currentDate)
+        case .biweekly:    return Calendar.current.date(byAdding: .day, value: 14, to: currentDate)
+        case .every10Days: return Calendar.current.date(byAdding: .day, value: 10, to: currentDate)
+        case .none:        return nil
         }
+    }
 }
 
 class PlantListClass: ObservableObject {
@@ -175,20 +160,11 @@ class PlantListClass: ObservableObject {
         self.plantList = listPlants
     }
     
-    func printPlantListNames() {
-        print("Printing plant list: [")
-        for plant in plantList {
-            print("name : " + plant.name)
-        }
-        print("]")
-    }
-    func removePlant(_ plant : Plant){
+    func removePlant(_ plant: Plant) {
         if let index = plantList.firstIndex(where: { $0.id == plant.id }) {
             plantList.remove(at: index)
         }
-        print("plant removed : \(plant.name)")
     }
-
 }
 
 class TaskListClass: ObservableObject {
@@ -198,23 +174,32 @@ class TaskListClass: ObservableObject {
         self.taskList = listTasks
     }
 
-    func printTaskListNames() {
-        print("Printing task list: [")
-        for myTask in taskList {
-            print("name : " + myTask.name)
-        }
-        print("]")
-    }
-
     func removeTask(_ myTask: PlantTask) {
         if let index = taskList.firstIndex(where: { $0.id == myTask.id }) {
             taskList.remove(at: index)
         }
-        print("task removed : \(myTask.name)")
     }
 }
 
-//Formatter la date en String
+class PostListClass: ObservableObject {
+    @Published var postsList: [Post]
+
+    init(listPosts: [Post] = posts) {
+        self.postsList = listPosts
+    }
+
+    func addPost(_ newPost: Post) {
+        postsList.insert(newPost, at: 0)
+    }
+
+    func addComment(to postId: UUID, comment: Comment) {
+        if let index = postsList.firstIndex(where: { $0.id == postId }) {
+            postsList[index].comments.append(comment)
+        }
+    }
+}
+
+// MARK: - Date formatter
 let taskDateFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "dd/MM/yyyy"

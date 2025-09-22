@@ -2,12 +2,12 @@
 //  Database.swift
 //  LeaDEMOexo
 //
-//  Created by apprenant95 on 15/09/2025.
+//  Fusion des deux versions du 15/09/2025
 //
 
 import SwiftUI
 
-// Liste des plantes
+
 var plantListInitVar: [Plant] = [
     Plant(
         name: "Lavande",
@@ -65,75 +65,21 @@ var plantListInitVar: [Plant] = [
     ),
 ]
 
-//ID des plantes
-let lavandeID = plantListInitVar.first(where: { $0.name == "Lavande" })?.id
-let basilicID = plantListInitVar.first(where: { $0.name == "Basilic" })?.id
-let ficusID = plantListInitVar.first(where: { $0.name == "Ficus" })?.id
+// IDs utiles
+let lavandeID  = plantListInitVar.first(where: { $0.name == "Lavande" })?.id
+let basilicID  = plantListInitVar.first(where: { $0.name == "Basilic" })?.id
+let ficusID    = plantListInitVar.first(where: { $0.name == "Ficus" })?.id
 let aloeveraID = plantListInitVar.first(where: { $0.name == "Aloe Vera" })?.id
 let monsteraID = plantListInitVar.first(where: { $0.name == "Monstera" })?.id
-let romarinID = plantListInitVar.first(where: { $0.name == "Romarin" })?.id
+let romarinID  = plantListInitVar.first(where: { $0.name == "Romarin" })?.id
 
-//Liste des tâches
-var taskListInitVar: [PlantTask] = [
-    PlantTask(
-        name: "Arroser",
-        date: "26/09/2025",
-        isDone: false,
-        plantID: lavandeID!
-    ),
-    PlantTask(
-        name: "Rajouter de l'engrais",
-        date: "26/09/2025",
-        isDone: true,
-        plantID: aloeveraID!
-    ),
-    PlantTask(
-        name: "Tailler",
-        date: "26/09/2025",
-        isDone: false,
-        plantID: ficusID!
-    )
+
+var users = [
+    Profile(username: "alice_garden",    profilePic: "person.circle"),
+    Profile(username: "bob_the_planter", profilePic: "hammer.fill"),
+    Profile(username: "clara_leaf",      profilePic: "paintbrush.fill"),
 ]
 
-
-//Liste des postes
-var posts: [Post] = [
-    Post(
-        title: "Comment arroser vos plantes efficacement",
-        image: "plant.fill",
-        contentText: "L'arrosage est crucial pour la santé de vos plantes...",
-        description: "Conseils d’arrosage pour plantes d’intérieur",
-        author: users[0],
-        date: "26/01/2025",
-        nbLike: 42,
-        filter: .beginnerFriendly,
-        comments: comments[2]
-    ),
-    Post(
-        title: "DIY : Construire une jardinière en bois",
-        image: "hammer.fill",
-        contentText: "Voici comment construire une belle jardinière en quelques étapes...",
-        description: "Tutoriel pour fabriquer une jardinière simple",
-        author: users[2],
-        date: "26/01/2025",
-        nbLike: 29,
-        filter: .beginnerFriendly,
-        comments: comments[0]
-    ),
-    Post(
-        title: "Les meilleures plantes dépolluantes",
-        image: "leaf.fill",
-        contentText: "Certaines plantes peuvent améliorer la qualité de l'air chez vous...",
-        description: "Top 5 des plantes purificatrices",
-        author: users[1],
-        date: "26/01/2025",
-        nbLike: 78,
-        filter: .airPurifier,
-        comments: comments[2]
-    ),
-]
-
-//Liste des commentaires
 var comments = [
     Comment(
         commentText: "Super article, merci !",
@@ -148,18 +94,133 @@ var comments = [
     Comment(
         commentText: "J’ai hâte de lire la suite.",
         date: "26/01/2025",
-        author: users[0]
+        author: users[2]
     ),
 ]
 
-//Liste des profils utilisateurs
-var users = [
-    Profile(username: "alice_garden", profilePic: "person.circle"),
-    Profile(username: "bob_the_planter", profilePic: "hammer.fill"),
-    Profile(username: "clara_leaf", profilePic: "paintbrush.fill"),
+
+var posts: [Post] = [
+    Post(
+        title: "Comment arroser vos plantes efficacement",
+        image: "plant.fill",
+        contentText: "L'arrosage est crucial pour la santé de vos plantes...",
+        description: "Conseils d’arrosage pour plantes d’intérieur",
+        author: users[0],
+        date: "26/01/2025",
+        nbLike: 42,
+        filter: .beginnerFriendly,
+        comments: [comments[2]]
+    ),
+    Post(
+        title: "DIY : Construire une jardinière en bois",
+        image: "hammer.fill",
+        contentText: "Voici comment construire une belle jardinière en quelques étapes...",
+        description: "Tutoriel pour fabriquer une jardinière simple",
+        author: users[2],
+        date: "26/01/2025",
+        nbLike: 29,
+        filter: .beginnerFriendly,
+        comments: [comments[0]]
+    ),
+    Post(
+        title: "Les meilleures plantes dépolluantes",
+        image: "leaf.fill",
+        contentText: "Certaines plantes peuvent améliorer la qualité de l'air chez vous...",
+        description: "Top 5 des plantes purificatrices",
+        author: users[1],
+        date: "26/01/2025",
+        nbLike: 78,
+        filter: .airPurifier,
+        comments: [comments[2]]
+    ),
+    Post(
+        title: "Aromatiques: bien démarrer basilic et menthe",
+        image: "leaf.circle.fill",
+        contentText: "Substrat, arrosage et lumière: le trio gagnant des aromatiques.",
+        description: "Guide express pour aromatiques",
+        author: users[2],
+        date: "27/01/2025",
+        nbLike: 21,
+        filter: .aromatic,
+        comments: [comments[1]]
+    ),
+    Post(
+        title: "Plantes peu gourmandes en eau",
+        image: "drop",
+        contentText: "Notre liste de plantes adaptées aux oublis d’arrosage.",
+        description: "Sélection faible arrosage",
+        author: users[1],
+        date: "28/01/2025",
+        nbLike: 33,
+        filter: .lowWater,
+        comments: []
+    ),
+    Post(
+        title: "Le plein soleil sans risque",
+        image: "sun.max.fill",
+        contentText: "Comment acclimater vos plantes au plein soleil progressivement.",
+        description: "Astuce d’exposition au soleil",
+        author: users[0],
+        date: "28/01/2025",
+        nbLike: 17,
+        filter: .fullSun,
+        comments: []
+    ),
+    Post(
+        title: "Plantes comestibles au balcon",
+        image: "cart.fill",
+        contentText: "Des variétés compactes parfaites pour les petits espaces.",
+        description: "Top des comestibles en pot",
+        author: users[2],
+        date: "29/01/2025",
+        nbLike: 25,
+        filter: .edible,
+        comments: []
+    ),
+    Post(
+        title: "Nettoyer l’air de la maison naturellement",
+        image: "wind",
+        contentText: "Ces plantes dépolluantes sont simples et efficaces.",
+        description: "Favoris dépolluants faciles",
+        author: users[1],
+        date: "29/01/2025",
+        nbLike: 40,
+        filter: .airPurifier,
+        comments: []
+    ),
 ]
 
-// Liste élargie des symboles SF courants, regroupés par thèmes
+
+/// Liste 1 : instantanée au 26/09/2025
+var tasks: [PlantTask] = [
+    PlantTask(name: "Arroser",               date: "26/09/2025", isDone: false, plantID: lavandeID!),
+    PlantTask(name: "Rajouter de l'engrais", date: "26/09/2025", isDone: true,  plantID: aloeveraID!),
+    PlantTask(name: "Tailler",               date: "26/09/2025", isDone: false, plantID: ficusID!)
+]
+
+/// Liste 2 : jeu d’exemple au 26/01/2025
+var taskListInitVar: [PlantTask] = [
+    PlantTask(
+        name: "Arroser",
+        date: "26/01/2025",
+        isDone: false,
+        plantID: lavandeID!
+    ),
+    PlantTask(
+        name: "Rajouter de l'engrais",
+        date: "26/01/2025",
+        isDone: true,
+        plantID: aloeveraID!
+    ),
+    PlantTask(
+        name: "Tailler",
+        date: "26/01/2025",
+        isDone: false,
+        plantID: ficusID!
+    )
+]
+
+
 let symbolsNature = [
     "leaf", "leaf.fill", "tree", "tree.fill", "camera.macro", "camera.macro.circle.fill",
     "tortoise", "tortoise.fill", "hare", "hare.fill", "ant", "ladybug", "fish", "pawprint.fill",
@@ -221,17 +282,17 @@ let symbolsHome = [
 ]
 
 // Limité aux symboles liés aux plantes et au jardinage
-let availableSFSymbols: [String] = (
-    symbolsNature + symbolsGardening
-)
+let availableSFSymbols: [String] = (symbolsNature + symbolsGardening)
+
 
 var taskListGlobalVar = TaskListClass()
 var plantListGlobalVar = PlantListClass()
+var postListGlobalVar  = PostListClass()
 
 let defaultPlant = Plant(
     name: "",
-    soilType: .wellDrained,  // premier de SoilType
-    watering: .daily,  // premier de WateringFrequency
-    sunlight: .fullSun,  // premier de Sunlight
+    soilType: .wellDrained,   // premier de SoilType
+    watering: .daily,         // premier de WateringFrequency
+    sunlight: .fullSun,       // premier de Sunlight
     isIndoor: true
 )
