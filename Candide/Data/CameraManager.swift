@@ -37,6 +37,7 @@ class CameraManager: NSObject, ObservableObject {
         let layer = AVCaptureVideoPreviewLayer(session: session)
         layer.videoGravity = .resizeAspectFill
         previewLayer = layer
+        startSession()
     }
 
     func capturePhoto() {
@@ -45,7 +46,9 @@ class CameraManager: NSObject, ObservableObject {
     
     func startSession() {
         DispatchQueue.global(qos: .userInitiated).async {
-            self.session.startRunning()
+            if !self.session.isRunning {
+                self.session.startRunning()
+            }
         }
     }
     

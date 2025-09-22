@@ -18,7 +18,9 @@ struct CameraPreview: UIViewRepresentable {//permet d’insérer une vue UIKit
     //ajuste la taille de la couche si l’écran change.
     func updateUIView(_ uiView: UIView, context: Context) {
         if let layer = layer {
-            layer.frame = uiView.bounds
+            DispatchQueue.main.async {
+                layer.frame = uiView.bounds
+            }
         }
     }
 }
@@ -66,7 +68,10 @@ struct CameraScreen: View {
                 }
                 .background(Color.black.opacity(0.3))
             }
-        }.onDisappear {
+        }.onAppear {
+            viewModel.cameraManager.startSession()
+        }
+        .onDisappear {
             viewModel.cameraManager.stopSession()
         }
     }
