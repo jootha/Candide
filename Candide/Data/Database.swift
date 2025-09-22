@@ -83,17 +83,17 @@ var users = [
 var comments = [
     Comment(
         commentText: "Super article, merci !",
-        date: "26/01/2025",
+        date: "26/09/2025",
         author: users[0]
     ),
     Comment(
         commentText: "Très bien écrit 👏",
-        date: "26/01/2025",
+        date: "26/09/2025",
         author: users[1]
     ),
     Comment(
         commentText: "J’ai hâte de lire la suite.",
-        date: "26/01/2025",
+        date: "26/09/2025",
         author: users[2]
     ),
 ]
@@ -106,7 +106,7 @@ var posts: [Post] = [
         contentText: "L'arrosage est crucial pour la santé de vos plantes...",
         description: "Conseils d’arrosage pour plantes d’intérieur",
         author: users[0],
-        date: "26/01/2025",
+        date: "26/09/2025",
         nbLike: 42,
         filter: .beginnerFriendly,
         comments: [comments[2]]
@@ -117,7 +117,7 @@ var posts: [Post] = [
         contentText: "Voici comment construire une belle jardinière en quelques étapes...",
         description: "Tutoriel pour fabriquer une jardinière simple",
         author: users[2],
-        date: "26/01/2025",
+        date: "26/09/2025",
         nbLike: 29,
         filter: .beginnerFriendly,
         comments: [comments[0]]
@@ -128,7 +128,7 @@ var posts: [Post] = [
         contentText: "Certaines plantes peuvent améliorer la qualité de l'air chez vous...",
         description: "Top 5 des plantes purificatrices",
         author: users[1],
-        date: "26/01/2025",
+        date: "26/09/2025",
         nbLike: 78,
         filter: .airPurifier,
         comments: [comments[2]]
@@ -139,7 +139,7 @@ var posts: [Post] = [
         contentText: "Substrat, arrosage et lumière: le trio gagnant des aromatiques.",
         description: "Guide express pour aromatiques",
         author: users[2],
-        date: "27/01/2025",
+        date: "27/09/2025",
         nbLike: 21,
         filter: .aromatic,
         comments: [comments[1]]
@@ -150,7 +150,7 @@ var posts: [Post] = [
         contentText: "Notre liste de plantes adaptées aux oublis d’arrosage.",
         description: "Sélection faible arrosage",
         author: users[1],
-        date: "28/01/2025",
+        date: "28/09/2025",
         nbLike: 33,
         filter: .lowWater,
         comments: []
@@ -161,7 +161,7 @@ var posts: [Post] = [
         contentText: "Comment acclimater vos plantes au plein soleil progressivement.",
         description: "Astuce d’exposition au soleil",
         author: users[0],
-        date: "28/01/2025",
+        date: "28/09/2025",
         nbLike: 17,
         filter: .fullSun,
         comments: []
@@ -172,7 +172,7 @@ var posts: [Post] = [
         contentText: "Des variétés compactes parfaites pour les petits espaces.",
         description: "Top des comestibles en pot",
         author: users[2],
-        date: "29/01/2025",
+        date: "29/09/2025",
         nbLike: 25,
         filter: .edible,
         comments: []
@@ -183,7 +183,7 @@ var posts: [Post] = [
         contentText: "Ces plantes dépolluantes sont simples et efficaces.",
         description: "Favoris dépolluants faciles",
         author: users[1],
-        date: "29/01/2025",
+        date: "29/09/2025",
         nbLike: 40,
         filter: .airPurifier,
         comments: []
@@ -198,23 +198,23 @@ var tasks: [PlantTask] = [
     PlantTask(name: "Tailler",               date: "26/09/2025", isDone: false, plantID: ficusID!)
 ]
 
-/// Liste 2 : jeu d’exemple au 26/01/2025
+/// Liste 2 : jeu d’exemple au 26/09/2025
 var taskListInitVar: [PlantTask] = [
     PlantTask(
         name: "Arroser",
-        date: "26/01/2025",
+        date: "26/09/2025",
         isDone: false,
         plantID: lavandeID!
     ),
     PlantTask(
         name: "Rajouter de l'engrais",
-        date: "26/01/2025",
+        date: "26/09/2025",
         isDone: true,
         plantID: aloeveraID!
     ),
     PlantTask(
         name: "Tailler",
-        date: "26/01/2025",
+        date: "26/09/2025",
         isDone: false,
         plantID: ficusID!
     )
