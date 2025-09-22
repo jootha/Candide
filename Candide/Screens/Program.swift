@@ -16,8 +16,6 @@ struct Program: View {
             $0.date == selectedDate.formatted(date: .numeric, time: .omitted)
         }
     }
-    @ObservedObject var taskList = taskListGlobalVar
-
 
     var body: some View {
         NavigationStack {
@@ -67,14 +65,26 @@ struct Program: View {
                         } else {
                             //     Liste des tasks
                             ScrollView(showsIndicators: false) {
-                                //     Liste des tasks
-                                ScrollView(showsIndicators: false) {
-                                    ForEach(taskList.taskList) { myTask in
-                                        if let plant = plantListGlobalVar.plantList
-                                            .first(where: { $0.id == myTask.plantID })
-                                        {
-                                            ProgramRow(task: myTask, plant: plant)
-                                        }
+                                ForEach(tasks.indices, id: \.self) {
+                                    taskIndex in
+                                    if tasks[taskIndex].date
+                                        == selectedDate.formatted(
+                                            date: .numeric,
+                                            time: .omitted
+                                        ),
+                                        let plant = plantListGlobalVar.plantList
+                                            .first(where: {
+                                                $0.id
+                                                    == tasks[taskIndex].plantID
+                                            })
+                                    {
+                                        ProgramRow(
+                                            task: $task[taskIndex],
+                                            plant: plant
+                                        )
+
+                                    }
+                                }
                             }.transition(.move(edge: .leading))
                         }
                     }
