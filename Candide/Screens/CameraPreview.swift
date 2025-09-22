@@ -1,30 +1,31 @@
-import SwiftUI
 import AVFoundation
+import SwiftUI
 
-struct CameraPreview: UIViewRepresentable {
+//Pont entre UIKit (preview caméra) et SwiftUI.
+struct CameraPreview: UIViewRepresentable {//permet d’insérer une vue UIKit
     var layer: AVCaptureVideoPreviewLayer?
 
+    //crée un UIView vide et y ajoute la couche de preview.
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
         if let layer = layer {
             layer.frame = UIScreen.main.bounds
             view.layer.addSublayer(layer)
-            print("=== Dans mon layer")
-            print(view.layer)
         }
         return view
     }
 
+    //ajuste la taille de la couche si l’écran change.
     func updateUIView(_ uiView: UIView, context: Context) {
-        print("updateuiview : " + (layerLocalVar?.videoGravity.rawValue)!)
-        
+        if let layer = layer {
             layer.frame = uiView.bounds
         }
     }
 }
 
 struct CameraScreen: View {
-    @StateObject var viewModel = PhotoViewModel()
+    //observes le PhotoViewModel
+    @ObservedObject var viewModel: PhotoViewModel
 
     var body: some View {
         ZStack {
@@ -32,12 +33,13 @@ struct CameraScreen: View {
                 CameraPreview(layer: layer)
                     .ignoresSafeArea()
             } else {
-                Color.black.ignoresSafeArea()
+                Color.cPink.ignoresSafeArea()
             }
 
             VStack {
                 Spacer()
-
+                
+                //Bouton prendre une photo
                 Button(action: {
                     viewModel.takePhoto()
                 }) {
@@ -64,6 +66,8 @@ struct CameraScreen: View {
                 }
                 .background(Color.black.opacity(0.3))
             }
+        }.onDisappear {
+            viewModel.cameraManager.stopSession()
         }
     }
 }
