@@ -43,6 +43,16 @@ enum Filter: String, CaseIterable, Hashable {
     case edible = "Plantes comestibles"
 }
 
+//Enum de la répétition de la tâche
+enum RepeatInterval: String, CaseIterable, Hashable {
+    case none = "Aucune"
+    case daily = "Tous les jours"
+    case every2Days = "Tous les 2 jours"
+    case weekly = "1 fois par semaine"
+    case biweekly = "Toutes les 2 semaines"
+    case every10Days = "Tous les 10 jours"
+}
+
 //  Structure de posts
 struct Post: Identifiable {
     var id = UUID()
@@ -114,17 +124,20 @@ class PlantTask: Identifiable, ObservableObject, Hashable {
     @Published var date: String
     @Published var isDone: Bool
     @Published var plantID: UUID
+    @Published var repeatInterval: RepeatInterval
 
     init(
         name: String,
         date: String,
         isDone: Bool,
-        plantID: UUID
+        plantID: UUID,
+        repeatInterval: RepeatInterval = .none
     ) {
         self.name = name
         self.date = date
         self.isDone = isDone
         self.plantID = plantID
+        self.repeatInterval = repeatInterval
     }
 
     static func == (lhs: PlantTask, rhs: PlantTask) -> Bool {
@@ -134,6 +147,25 @@ class PlantTask: Identifiable, ObservableObject, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+//    Fonction pour que la tâche se répète
+    func nextDate() -> Date? {
+            guard let currentDate = taskDateFormatter.date(from: self.date) else { return nil }
+            
+            switch repeatInterval {
+            case .daily:
+                return Calendar.current.date(byAdding: .day, value: 1, to: currentDate)
+            case .every2Days:
+                return Calendar.current.date(byAdding: .day, value: 2, to: currentDate)
+            case .weekly:
+                return Calendar.current.date(byAdding: .day, value: 7, to: currentDate)
+            case .biweekly:
+                return Calendar.current.date(byAdding: .day, value: 14, to: currentDate)
+            case .every10Days:
+                return Calendar.current.date(byAdding: .day, value: 10, to: currentDate)
+            case .none:
+                return nil
+            }
+        }
 }
 
 class PlantListClass: ObservableObject {
@@ -181,3 +213,10 @@ class TaskListClass: ObservableObject {
         print("task removed : \(myTask.name)")
     }
 }
+
+//Formatter la date en String
+let taskDateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd/MM/yyyy"
+    return formatter
+}()

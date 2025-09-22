@@ -9,10 +9,10 @@ import SwiftUI
 
 struct Program: View {
 
-    @State var task: [PlantTask] = tasks
+    @ObservedObject var taskList = taskListGlobalVar
     @State var selectedDate: Date = Date()
     var filteredTasks: [PlantTask] {
-        tasks.filter {
+        taskList.taskList.filter {
             $0.date == selectedDate.formatted(date: .numeric, time: .omitted)
         }
     }
@@ -65,21 +65,16 @@ struct Program: View {
                         } else {
                             //     Liste des tasks
                             ScrollView(showsIndicators: false) {
-                                ForEach(tasks.indices, id: \.self) {
-                                    taskIndex in
-                                    if tasks[taskIndex].date
-                                        == selectedDate.formatted(
-                                            date: .numeric,
-                                            time: .omitted
-                                        ),
-                                        let plant = plantListGlobalVar.plantList
+                                ForEach(filteredTasks) {
+                                    myTask in
+
+                                    if let plant = plantListGlobalVar.plantList
                                             .first(where: {
-                                                $0.id
-                                                    == tasks[taskIndex].plantID
+                                                $0.id == myTask.plantID
                                             })
                                     {
                                         ProgramRow(
-                                            task: $task[taskIndex],
+                                            task: myTask,
                                             plant: plant
                                         )
 
