@@ -10,16 +10,16 @@ import SwiftUI
 struct ProgramRow: View {
     
     @Binding var task: PlantTask
-        var plant: Plant
+    var plant: Plant
     
     
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
             
-                Circle()
-                    .fill(Color.cYellow)
-                    .frame(width: 10, height: 10)
-                    .padding(.top, 38)
+            Circle()
+                .fill(Color.cYellow)
+                .frame(width: 10, height: 10)
+                .padding(.top, 38)
             VStack {
                 HStack {
                     Text(task.name)
@@ -43,13 +43,13 @@ struct ProgramRow: View {
                     .padding(.horizontal)
                 
                 if let image = plant.imageName {
-                        Image(image)
-                            .resizable()
-                            .scaledToFit()
-                            .cornerRadius(16)
-                            .padding()
-                            .shadow(radius:5)
-                            
+                    Image(image)
+                        .resizable()
+                        .scaledToFit()
+                        .cornerRadius(16)
+                        .padding()
+                        .shadow(radius:5)
+                    
                     
                 } else {
                     Image("default")
@@ -63,14 +63,15 @@ struct ProgramRow: View {
             }   .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding()
                 .background(Color.cYellow)
-                .cornerRadius(10)
+                .cornerRadius(24)
+                .shadow(radius:2)
         } .padding(.vertical,8)
-
-            
-                
-            
-            }
-        }
+        
+        
+        
+        
+    }
+}
 
 #Preview {
     ProgramRow(task: .constant(tasks[0]), plant: plantListGlobalVar.plantList[0])

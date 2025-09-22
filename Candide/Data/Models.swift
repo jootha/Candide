@@ -33,7 +33,7 @@ enum Sunlight: String, CaseIterable, Hashable {
 }
 
 //Enum de filtres de posts
-enum Filter: String {
+enum Filter: String, CaseIterable, Hashable {
     case interior = "Plantes d’intérieur"
     case aromatic = "Plantes aromatiques"
     case lowWater = "Faible arrosage"
@@ -90,14 +90,6 @@ struct PlantTask: Identifiable {
     var plantID: UUID
 }
 
-// Tags de forum
-enum PostCategory: String, CaseIterable, Hashable {
-    case plantes = "Plantes"
-    case medecine = "medecine"
-    case consommable = "consommable"
-    case engrais = "engrais"
-}
-
 // Structure de posts
 struct Post: Identifiable {
     var id = UUID()
@@ -110,7 +102,6 @@ struct Post: Identifiable {
     var nbLike: Int
     var filter: Filter
     var comments: Comment
-    var category: PostCategory
 }
 
 

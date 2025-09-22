@@ -2,9 +2,9 @@ import SwiftUI
 
 struct ForumView: View {
     let postsData: [Post] = posts
-    @State var selected: PostCategory?
+    @State var selected: Filter?
 
-    var categories: [PostCategory] { [.plantes, .medecine, .consommable, .engrais] }
+    var categories: [Filter] { Filter.allCases }
 
     var body: some View {
         NavigationStack {
@@ -52,7 +52,7 @@ struct ForumView: View {
                         contentList
                     }
                     .padding(.horizontal, 8)
-                    .padding(.top, 24)     
+                    .padding(.top, 24)
                     .padding(.bottom, 24)
 
                     Spacer(minLength: 0)
@@ -73,7 +73,7 @@ struct ForumView: View {
 
     var filteredItems: [Post] {
         guard let sel = selected else { return postsData }
-        return postsData.filter { $0.category == sel }
+        return postsData.filter { $0.filter == sel }
     }
 
     var contentList: some View {
@@ -92,7 +92,7 @@ struct ForumView: View {
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(filteredItems.enumerated()), id: \.offset) { idx, post in
-                        NavigationLink { destination(forIndex: idx) } label: {
+                        NavigationLink { PostDetail1(post: post) } label: {
                             Row(post: post)
                         }
                         .buttonStyle(.plain)
@@ -106,15 +106,6 @@ struct ForumView: View {
             }
         }
     }
-
-    @ViewBuilder
-    func destination(forIndex idx: Int) -> some View {
-        switch idx {
-        case 0: PostDetail1()
-        case 1: PostDetail2()
-        default: PostDetail3()
-        }
-    }
 }
 
 struct Row: View {
@@ -122,7 +113,7 @@ struct Row: View {
     var body: some View {
         HStack(spacing: 16) {
             ZStack {
-                RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Color.cPink) 
+                RoundedRectangle(cornerRadius: 18, style: .continuous).fill(Color.cPink)
                 Image(systemName: post.image).resizable().scaledToFit().padding(14).foregroundStyle(.primary)
             }
             .frame(width: 72, height: 72)

@@ -30,13 +30,20 @@ struct PostDetail3: View {
 
                 Text(post.contentText)
                     .padding()
-                    .background(Color.cYellow.opacity(0.9), in: RoundedRectangle(cornerRadius: 12))
+                    .background(
+                        Color.cYellow.opacity(0.9),
+                        in: RoundedRectangle(cornerRadius: 12)
+                    )
 
                 HStack(spacing: 12) {
-                    Button { liked.toggle() } label: {
-                        Label("J’aime (\(post.nbLike + (liked ? 1 : 0)))",
-                              systemImage: liked ? "heart.fill" : "heart")
-                            .foregroundColor(.black)
+                    Button {
+                        liked.toggle()
+                    } label: {
+                        Label(
+                            "J’aime (\(post.nbLike + (liked ? 1 : 0)))",
+                            systemImage: liked ? "heart.fill" : "heart"
+                        )
+                        .foregroundColor(.black)
                     }
                     .buttonStyle(.borderedProminent)
                     .tint(Color.cYellow)
@@ -76,7 +83,10 @@ struct PostDetail3: View {
                         Spacer()
                     }
                     .padding(8)
-                    .background(Color.cYellow, in: RoundedRectangle(cornerRadius: 8))
+                    .background(
+                        Color.cYellow,
+                        in: RoundedRectangle(cornerRadius: 8)
+                    )
 
                     HStack(spacing: 8) {
                         TextField("Ajouter un commentaire…", text: $comment)
@@ -84,12 +94,20 @@ struct PostDetail3: View {
                         Button {
                             comment = ""
                         } label: {
-                            Image(systemName: "paperplane.fill").foregroundColor(.black)
+                            Image(systemName: "paperplane.fill")
+                                .foregroundColor(.black)
                         }
-                        .disabled(comment.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                        .disabled(
+                            comment.trimmingCharacters(
+                                in: .whitespacesAndNewlines
+                            ).isEmpty
+                        )
                     }
                     .padding(8)
-                    .background(Color.cYellow, in: RoundedRectangle(cornerRadius: 8))
+                    .background(
+                        Color.cYellow,
+                        in: RoundedRectangle(cornerRadius: 8)
+                    )
                 }
             }
             .padding()
