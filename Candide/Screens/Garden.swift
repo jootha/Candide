@@ -9,10 +9,11 @@ import SwiftUI
 
 struct Garden: View {
     @ObservedObject var plantListLocalVar = plantListGlobalVar
-    @State var navPath = [Plant]()
+    @State var navPath = NavigationPath()
     @State var searchText: String = ""
 
     var filteredData: [Plant] {
+
         return searchText.isEmpty
         ? plantListLocalVar.plantList
             : plantListLocalVar.plantList.filter {
@@ -43,18 +44,8 @@ struct Garden: View {
                     Spacer()
                     HStack {
                         Spacer()
-                        NavigationLink {
-                            CameraScreen()
-                        }label :{
-                            Label("Plus", systemImage: "photo")
-                                .labelStyle(.iconOnly)
-                                .padding(16)
-                                .background(.cDarkBlue)
-                                .foregroundStyle(.cOrange)
-                                .cornerRadius(32)
-                                .font(.system(size: 32))
-                                .bold()
-                        }
+                        AddButton(action: "garden",navPath: $navPath)
+                            .padding()
                     }
                 }
 

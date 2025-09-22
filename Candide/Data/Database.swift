@@ -15,16 +15,14 @@ var plantListInitVar: [Plant] = [
         soilType: .calcareous,
         watering: .every10Days,
         sunlight: .fullSun,
-        isIndoor: false,
-        plantTask: []
+        isIndoor: false
     ),
     Plant(
         name: "Tomate",
         soilType: .rich,
         watering: .every2Days,
         sunlight: .fullSun,
-        isIndoor: false,
-        plantTask: []
+        isIndoor: false
     ),
     Plant(
         name: "Aloe Vera",
@@ -32,16 +30,14 @@ var plantListInitVar: [Plant] = [
         soilType: .cactusMix,
         watering: .biweekly,
         sunlight: .indirectLight,
-        isIndoor: true,
-        plantTask: []
+        isIndoor: true
     ),
     Plant(
         name: "Ficus",
         soilType: .wellDrained,
         watering: .weekly,
         sunlight: .indirectLight,
-        isIndoor: true,
-        plantTask: []
+        isIndoor: true
     ),
     Plant(
         name: "Basilic",
@@ -49,8 +45,7 @@ var plantListInitVar: [Plant] = [
         soilType: .rich,
         watering: .every2Days,
         sunlight: .fullSun,
-        isIndoor: false,
-        plantTask: []
+        isIndoor: false
     ),
     Plant(
         name: "Monstera",
@@ -58,8 +53,7 @@ var plantListInitVar: [Plant] = [
         soilType: .wellDrained,
         watering: .weekly,
         sunlight: .mediumLight,
-        isIndoor: true,
-        plantTask: []
+        isIndoor: true
     ),
     Plant(
         name: "Romarin",
@@ -67,8 +61,7 @@ var plantListInitVar: [Plant] = [
         soilType: .dry,
         watering: .weekly,
         sunlight: .fullSun,
-        isIndoor: false,
-        plantTask: []
+        isIndoor: false
     ),
 ]
 
@@ -87,6 +80,27 @@ var tasks: [PlantTask] = [
     PlantTask(name: "Tailler", date: "26/09/2025", isDone: false, plantID: ficusID!) ]
 
 
+//Liste des tâches
+var taskListInitVar: [PlantTask] = [
+    PlantTask(
+        name: "Arroser",
+        date: "26/01/2025",
+        isDone: false,
+        plantID: lavandeID!
+    ),
+    PlantTask(
+        name: "Rajouter de l'engrais",
+        date: "26/01/2025",
+        isDone: true,
+        plantID: aloeveraID!
+    ),
+    PlantTask(
+        name: "Tailler",
+        date: "26/01/2025",
+        isDone: false,
+        plantID: ficusID!
+    )
+]
 
 
 //Liste des postes
@@ -218,13 +232,13 @@ let availableSFSymbols: [String] = (
     symbolsNature + symbolsGardening
 )
 
+var taskListGlobalVar = TaskListClass()
 var plantListGlobalVar = PlantListClass()
 
-var defaultPlant = Plant(
+let defaultPlant = Plant(
     name: "",
     soilType: .wellDrained,  // premier de SoilType
     watering: .daily,  // premier de WateringFrequency
     sunlight: .fullSun,  // premier de Sunlight
-    isIndoor: true,
-    plantTask: []
+    isIndoor: true
 )

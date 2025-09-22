@@ -9,25 +9,19 @@ import SwiftUI
 
 struct AddButton: View {
     @State var action: String
-    @State var taptap = false
+    @Binding var navPath: NavigationPath
 
     var body: some View {
-
-        NavigationLink {
-
+        Button {
             switch action {
             case "post":
-                AddPostView()
-
-            case "task":
-                AddTaskView()
-                
-            default :
-                AddPlantView(plant: defaultPlant)
+                navPath.append(1)
+            //            case "task":
+            //                navPath.append(2)
+            default:
+                navPath.append(3)
             }
-
         } label: {
-
             Label("Plus", systemImage: "plus")
                 .labelStyle(.iconOnly)
                 .padding(16)
@@ -37,11 +31,19 @@ struct AddButton: View {
                 .font(.system(size: 32))
                 .bold()
         }
-
+        .navigationDestination(for: Int.self) { index in
+            switch index {
+            case 1:
+                AddPostView()
+            //            case 2:
+            //                AddTaskView(plant: plant, navPath: $navPath)
+            default:
+                AddPlantView(navPath: $navPath) { newPlant in
+                    plantListGlobalVar.plantList.append(newPlant)
+                }
+            }
+        }
     }
-
 }
 
-#Preview {
-    AddButton(action: "post")
-}
+#Preview { AddButton(action: "post", navPath: .constant(NavigationPath())) }

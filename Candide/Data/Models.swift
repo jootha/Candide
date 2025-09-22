@@ -43,54 +43,7 @@ enum Filter: String, CaseIterable, Hashable {
     case edible = "Plantes comestibles"
 }
 
-//Structure de plantes
-class Plant: Identifiable, ObservableObject, Hashable {
-    var id = UUID()
-    @Published var name: String
-    @Published var imageName: String?
-    @Published var soilType: SoilType
-    @Published var watering: WateringFrequency
-    @Published var sunlight: Sunlight
-    @Published var isIndoor: Bool
-    @Published var plantTask: [PlantTask]
-
-    init(
-        name: String,
-        imageName: String? = nil,
-        soilType: SoilType,
-        watering: WateringFrequency,
-        sunlight: Sunlight,
-        isIndoor: Bool,
-        plantTask: [PlantTask]
-    ) {
-        self.name = name
-        self.imageName = imageName
-        self.soilType = soilType
-        self.watering = watering
-        self.sunlight = sunlight
-        self.isIndoor = isIndoor
-        self.plantTask = plantTask
-    }
-
-    static func == (lhs: Plant, rhs: Plant) -> Bool {
-        return lhs.id == rhs.id
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-    }
-}
-
-//Structure de tâches
-struct PlantTask: Identifiable {
-    var id = UUID()
-    var name: String
-    var date: String
-    var isDone: Bool
-    var plantID: UUID
-}
-
-// Structure de posts
+//  Structure de posts
 struct Post: Identifiable {
     var id = UUID()
     var title: String
@@ -104,8 +57,7 @@ struct Post: Identifiable {
     var comments: Comment
 }
 
-
-//Structure de commentaires
+//  Structure de commentaires
 struct Comment: Identifiable {
     var id = UUID()
     var commentText: String
@@ -113,11 +65,75 @@ struct Comment: Identifiable {
     var author: Profile
 }
 
-//Structure de profil utilisateur
+//  Structure de profil utilisateur
 struct Profile: Identifiable {
     var id = UUID()
     var username: String
     var profilePic: String
+}
+
+//  Classe de plantes
+class Plant: Identifiable, ObservableObject, Hashable {
+    var id = UUID()
+    @Published var name: String
+    @Published var imageName: String?
+    @Published var soilType: SoilType
+    @Published var watering: WateringFrequency
+    @Published var sunlight: Sunlight
+    @Published var isIndoor: Bool
+
+    init(
+        name: String,
+        imageName: String? = nil,
+        soilType: SoilType,
+        watering: WateringFrequency,
+        sunlight: Sunlight,
+        isIndoor: Bool
+    ) {
+        self.name = name
+        self.imageName = imageName
+        self.soilType = soilType
+        self.watering = watering
+        self.sunlight = sunlight
+        self.isIndoor = isIndoor
+    }
+
+    static func == (lhs: Plant, rhs: Plant) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+//  Classe de tâches
+class PlantTask: Identifiable, ObservableObject, Hashable {
+    var id = UUID()
+    @Published var name: String
+    @Published var date: String
+    @Published var isDone: Bool
+    @Published var plantID: UUID
+
+    init(
+        name: String,
+        date: String,
+        isDone: Bool,
+        plantID: UUID
+    ) {
+        self.name = name
+        self.date = date
+        self.isDone = isDone
+        self.plantID = plantID
+    }
+
+    static func == (lhs: PlantTask, rhs: PlantTask) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
 }
 
 class PlantListClass: ObservableObject {
@@ -140,6 +156,28 @@ class PlantListClass: ObservableObject {
         }
         print("plant removed : \(plant.name)")
     }
-    
-    
+
+}
+
+class TaskListClass: ObservableObject {
+    @Published var taskList: [PlantTask]
+
+    init(listTasks: [PlantTask] = taskListInitVar) {
+        self.taskList = listTasks
+    }
+
+    func printTaskListNames() {
+        print("Printing task list: [")
+        for myTask in taskList {
+            print("name : " + myTask.name)
+        }
+        print("]")
+    }
+
+    func removeTask(_ myTask: PlantTask) {
+        if let index = taskList.firstIndex(where: { $0.id == myTask.id }) {
+            taskList.remove(at: index)
+        }
+        print("task removed : \(myTask.name)")
+    }
 }

@@ -8,26 +8,22 @@
 import SwiftUI
 
 struct PlantRowInfo: View {
-    
     var plantValue: String
     var plantText: String
     var plantIco: String
-    
+
     var body: some View {
-        
-        HStack {
+        HStack(alignment: .top, spacing: 16) {
             Text(plantIco + " ")
-            Text (plantText + ": ")
-            Text (plantValue)
+            Text(plantText + ": ")
+            Text(plantValue)
         }
         .frame(maxWidth: .infinity)
         .padding()
         .background(Color.cPink)
         .cornerRadius(8)
         .padding(.horizontal)
-        
     }
-    
 }
 
-#Preview { PlantRowInfo(plantValue: "0", plantText: "toto", plantIco: "plus" ) }
+#Preview { PlantRowInfo(plantValue: "0", plantText: "toto", plantIco: "plus") }
