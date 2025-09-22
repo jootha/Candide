@@ -8,39 +8,64 @@
 import SwiftUI
 
 struct Garden: View {
+    @ObservedObject var plantListLocalVar = plantListGlobalVar
+    @State var navPath = NavigationPath()
+    @State var searchText: String = ""
+
+    var filteredData: [Plant] {
+
+        return searchText.isEmpty
+        ? plantListLocalVar.plantList
+            : plantListLocalVar.plantList.filter {
+                $0.name.localizedCaseInsensitiveContains(searchText)
+            }
+    }
+
     var body: some View {
-        VStack {
-            Text("Jardin")
-            
-            ZStack{
-                Color.green.ignoresSafeArea()
-                
+
+        NavigationStack(path: $navPath) {
+
+            ZStack {
+                Color.cGreen.ignoresSafeArea()
+
+                ScrollView {
+                    ForEach(filteredData) { plant in
+                        Button {
+                            navPath.append(plant)
+                        } label: {
+                            GardenPlanteFrame(plant: plant)
+                        }
+                    }.searchable(text: $searchText, prompt: "Rechercher...") {}
+                        .padding(.vertical)
+
+                }.padding(.horizontal)
+
                 VStack {
-                    ZStack{
-                        Rectangle().fill(Color(.cDarkBlue2C3E50))
-                            .frame(width: 350, height: 200)
-                            .cornerRadius(16)
+                    Spacer()
+                    HStack {
+                        Spacer()
+                        AddButton(action: "garden",navPath: $navPath)
                             .padding()
-                        
-                        Rectangle()
-                            .foregroundStyle(.blue)
-                            .frame(width: 300, height: 150)
-                        
-                        HStack{
-                            Spacer()
-                            ZStack{
-                                Circle().frame(width: 30)
-                                    .opacity(0.60)
-                                    .foregroundColor(.gray)
-                                Image(systemName: "heart.fill")
-                            }
-                            Spacer()
-                        }.frame(maxWidth: 350)
                     }
                 }
+
             }
+            .navigationDestination(for: Plant.self) { plant in
+                PlantView(plant: plant, navPath: $navPath)
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .principal) {
+                    Text("Mon jardin")
+                        .font(.title)
+                        .bold()
+                        .foregroundColor(.white)
+                }
+            }
+            .toolbarBackground(.cDarkBlue, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
         }
-        .padding()
+
     }
 }
 
