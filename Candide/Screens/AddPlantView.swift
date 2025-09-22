@@ -15,6 +15,10 @@ struct AddPlantView: View {
     @State private var isIndoor: Bool = true
     @Binding var navPath: NavigationPath
     var onSave: (Plant) -> Void
+    
+    @StateObject var photoViewModel = PhotoViewModel()
+    @State private var showCamera = false
+
 
     var body: some View {
         Form {
@@ -41,7 +45,15 @@ struct AddPlantView: View {
             }
 
             Toggle("En Interieur?", isOn: $isIndoor)
-
+            
+            ForEach(photoViewModel.photos.indices, id: \.self) { index in
+                Image(uiImage: photoViewModel.photos[index])
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 100, height: 100)
+                    .clipped()
+                    .cornerRadius(12)
+            }
         }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
@@ -61,7 +73,24 @@ struct AddPlantView: View {
             }
         }
         .navigationTitle("Nouvelle plante")
+        
+        //Ajout Image
+        Button{
+            showCamera = true
+        } label: {
+            Label("Plus", systemImage: "photo")
+                .labelStyle(.iconOnly)
+                .padding(16)
+                .background(.cDarkBlue)
+                .foregroundStyle(.cOrange)
+                .cornerRadius(32)
+                .font(.system(size: 32))
+                .bold()
+        }.sheet(isPresented: $showCamera) {
+            CameraScreen(viewModel: photoViewModel)
+        }
     }
+   
 }
 
 #Preview {

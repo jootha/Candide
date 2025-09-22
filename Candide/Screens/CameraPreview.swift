@@ -1,9 +1,11 @@
-import SwiftUI
 import AVFoundation
+import SwiftUI
 
-struct CameraPreview: UIViewRepresentable {
+//Pont entre UIKit (preview caméra) et SwiftUI.
+struct CameraPreview: UIViewRepresentable {//permet d’insérer une vue UIKit
     var layer: AVCaptureVideoPreviewLayer?
 
+    //crée un UIView vide et y ajoute la couche de preview.
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
         if let layer = layer {
@@ -13,15 +15,19 @@ struct CameraPreview: UIViewRepresentable {
         return view
     }
 
+    //ajuste la taille de la couche si l’écran change.
     func updateUIView(_ uiView: UIView, context: Context) {
         if let layer = layer {
-            layer.frame = uiView.bounds
+            DispatchQueue.main.async {
+                layer.frame = uiView.bounds
+            }
         }
     }
 }
 
 struct CameraScreen: View {
-    @StateObject var viewModel = PhotoViewModel()
+    //observes le PhotoViewModel
+    @ObservedObject var viewModel: PhotoViewModel
 
     var body: some View {
         ZStack {
@@ -29,12 +35,13 @@ struct CameraScreen: View {
                 CameraPreview(layer: layer)
                     .ignoresSafeArea()
             } else {
-                Color.black.ignoresSafeArea()
+                Color.cPink.ignoresSafeArea()
             }
 
             VStack {
                 Spacer()
-
+                
+                //Bouton prendre une photo
                 Button(action: {
                     viewModel.takePhoto()
                 }) {
@@ -46,11 +53,26 @@ struct CameraScreen: View {
                 }
 
                 // Liste des photos capturées
-                List(viewModel.photos, id: \.self) { name in
-                    Text(name)
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(viewModel.photos.indices, id: \.self) { index in
+                            Image(uiImage: viewModel.photos[index])
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 100, height: 100)
+                                .clipped()
+                                .cornerRadius(12)
+                        }
+                    }
+                    .padding()
                 }
-                .frame(height: 200)
+                .background(Color.black.opacity(0.3))
             }
+        }.onAppear {
+            viewModel.cameraManager.startSession()
+        }
+        .onDisappear {
+            viewModel.cameraManager.stopSession()
         }
     }
 }

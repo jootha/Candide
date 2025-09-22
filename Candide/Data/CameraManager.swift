@@ -2,14 +2,18 @@ import AVFoundation
 import UIKit
 
 protocol CameraManagerDelegate: AnyObject {
-    func didCapturePhoto(named fileName: String)
+    func didCapturePhoto(_ image: UIImage)
 }
 
 class CameraManager: NSObject, ObservableObject {
+    //Central : Reçoit les données de la caméra et les envoie à différents “outputs” (par ex. un fichier, un écran)
     private let session = AVCaptureSession()
+    //c’est un type de sortie, permet de prendre une photo.
     private let output = AVCapturePhotoOutput()
+    //couche graphique (CALayer), montre en direct ce que voit la caméra.
     @Published var previewLayer: AVCaptureVideoPreviewLayer?
-
+    //Je sais capturer des photos, mais je ne sais pas quoi en faire… donc je vais prévenir quelqu’un d’autre quand j’en ai une
+    //Eviter fuites mémoire : je garde une référence, mais je n’empêche pas l’autre objet d’être détruit quand il n’est plus utilisé”
     weak var delegate: CameraManagerDelegate?
 
     override init() {
@@ -21,7 +25,6 @@ class CameraManager: NSObject, ObservableObject {
         session.beginConfiguration()
         session.sessionPreset = .photo
 
-        // Choisir la caméra arrière
         guard let device = AVCaptureDevice.default(.builtInWideAngleCamera,
                                                    for: .video,
                                                    position: .back) else { return }
@@ -31,35 +34,43 @@ class CameraManager: NSObject, ObservableObject {
         if session.canAddOutput(output) { session.addOutput(output) }
 
         session.commitConfiguration()
-
         let layer = AVCaptureVideoPreviewLayer(session: session)
         layer.videoGravity = .resizeAspectFill
         previewLayer = layer
-
-        session.startRunning()
+        startSession()
     }
 
     func capturePhoto() {
-        let settings = AVCapturePhotoSettings()
-        output.capturePhoto(with: settings, delegate: self)
+        output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
     }
+    
+    func startSession() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            if !self.session.isRunning {
+                self.session.startRunning()
+            }
+        }
+    }
+    
+    func stopSession() {
+        DispatchQueue.global(qos: .userInitiated).async {
+            if self.session.isRunning {
+                self.session.stopRunning()
+            }
+        }
+    }
+
 }
 
+//récupères les données binaires de la photo et les convertis en UIImage.
 extension CameraManager: AVCapturePhotoCaptureDelegate {
     func photoOutput(_ output: AVCapturePhotoOutput,
                      didFinishProcessingPhoto photo: AVCapturePhoto,
                      error: Error?) {
         guard error == nil else { return }
-
-        if let data = photo.fileDataRepresentation() {
-            // Sauvegarder l’image dans Documents
-            let fileName = "photo_\(UUID().uuidString.prefix(6)).jpg"
-            let url = FileManager.default.urls(for: .documentDirectory,
-                                               in: .userDomainMask)[0].appendingPathComponent(fileName)
-            try? data.write(to: url)
-
-            // Notifier le delegate
-            delegate?.didCapturePhoto(named: fileName)
+        if let data = photo.fileDataRepresentation(),
+           let image = UIImage(data: data) {
+            delegate?.didCapturePhoto(image)
         }
     }
 }
