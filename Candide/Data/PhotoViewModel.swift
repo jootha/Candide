@@ -6,7 +6,8 @@ import SwiftUI
 class PhotoViewModel: ObservableObject, CameraManagerDelegate {
     
     //liste observable de toutes les photos prises. Quand elle change, SwiftUI met à jour l’écran automatiquement
-    @Published var photos: [UIImage] = []
+    @Published var photo: UIImage = UIImage()
+    
     
     //on instancie le moteur.
     let cameraManager = CameraManager()
@@ -27,8 +28,9 @@ class PhotoViewModel: ObservableObject, CameraManagerDelegate {
         let fileName = "plant_\(UUID().uuidString).jpg"
         if let savedName = saveImageToDocuments(image, fileName: fileName) {
             DispatchQueue.main.async {
-                self.photos.append(image)
+                self.photo = image
                 globalLastPhotoTaken = savedName
+                print(globalLastPhotoTaken.description)
             }
         }
     }

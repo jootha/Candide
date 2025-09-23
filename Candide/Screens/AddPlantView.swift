@@ -43,21 +43,18 @@ struct AddPlantView: View {
             }
 
             Toggle("En Interieur?", isOn: $isIndoor)
-
-            ForEach(photoViewModel.photos.indices, id: \.self) { index in
-                Image(uiImage: photoViewModel.photos[index])
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 350, height: 350)
-                    .clipped()
-                    .cornerRadius(12)
-                    .onTapGesture {
-                        selectedPhoto = photoViewModel.photos[index]
-                        showFullScreen = true
-                    }
+            
+            Image(uiImage: photoViewModel.photo)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 350, height: 350)
+                .clipped()
+                .cornerRadius(12)
+                .onTapGesture {
+                    selectedPhoto = photoViewModel.photo
+                    showFullScreen = true
             }
             if selectedPhoto != nil {
-                Text(selectedPhoto!.description)
                 Image(uiImage: selectedPhoto!)
                     .resizable()
                     .scaledToFill()
@@ -69,7 +66,7 @@ struct AddPlantView: View {
                 Button("Enregistrer") {
                     let newPlant = Plant(
                         name: name,
-                        imageName: globalLastPhotoTaken,
+                        imageName: globalLastPhotoTaken.isEmpty ? nil : globalLastPhotoTaken,
                         soilType: soilType,
                         watering: watering,
                         sunlight: sunlight,
@@ -77,6 +74,7 @@ struct AddPlantView: View {
                     )
 
                     onSave(newPlant)
+                    globalLastPhotoTaken = ""
                     navPath.removeLast()
                 }
                 .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
