@@ -28,6 +28,10 @@ struct CameraPreview: UIViewRepresentable {//permet d’insérer une vue UIKit
 struct CameraScreen: View {
     //observes le PhotoViewModel
     @ObservedObject var viewModel: PhotoViewModel
+    //Fermer la modal
+    @Environment(\.dismiss) private var dismiss
+
+    
 
     var body: some View {
         ZStack {
@@ -44,6 +48,7 @@ struct CameraScreen: View {
                 //Bouton prendre une photo
                 Button(action: {
                     viewModel.takePhoto()
+                    dismiss()   //ferme la modal
                 }) {
                     Circle()
                         .fill(Color.white)

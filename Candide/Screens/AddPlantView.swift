@@ -15,17 +15,15 @@ struct AddPlantView: View {
     @State private var isIndoor: Bool = true
     @Binding var navPath: NavigationPath
     var onSave: (Plant) -> Void
-    
+
     @StateObject var photoViewModel = PhotoViewModel()
     @State private var showCamera = false
-
+    @State private var selectedPhoto: UIImage? = nil
+    @State private var showFullScreen = false
 
     var body: some View {
         Form {
             TextField("**Nom**", text: $name)
-
-            //  IMAGES??t???
-
             Picker("Ensoleillement", selection: $sunlight) {
                 ForEach(Sunlight.allCases, id: \.self) { light in
                     Text(light.rawValue)
@@ -45,14 +43,25 @@ struct AddPlantView: View {
             }
 
             Toggle("En Interieur?", isOn: $isIndoor)
-            
+
             ForEach(photoViewModel.photos.indices, id: \.self) { index in
                 Image(uiImage: photoViewModel.photos[index])
                     .resizable()
                     .scaledToFill()
-                    .frame(width: 100, height: 100)
+                    .frame(width: 350, height: 350)
                     .clipped()
                     .cornerRadius(12)
+                    .onTapGesture {
+                        selectedPhoto = photoViewModel.photos[index]
+                        showFullScreen = true
+                    }
+            }
+            if selectedPhoto != nil {
+                Text(selectedPhoto!.description)
+                Image(uiImage: selectedPhoto!)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 1, height: 1)
             }
         }
         .toolbar {
@@ -60,6 +69,7 @@ struct AddPlantView: View {
                 Button("Enregistrer") {
                     let newPlant = Plant(
                         name: name,
+                        imageName: globalLastPhotoTaken,
                         soilType: soilType,
                         watering: watering,
                         sunlight: sunlight,
@@ -72,10 +82,38 @@ struct AddPlantView: View {
                 .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
+        .fullScreenCover(isPresented: $showFullScreen) {
+            if selectedPhoto != nil {
+                ZStack {
+                    Color.black.ignoresSafeArea()
+                    Image(uiImage: selectedPhoto!)
+                        .resizable()
+                        .scaledToFit()
+                        .ignoresSafeArea()
+                    VStack {
+                        HStack {
+                            Spacer()
+                            Button {
+                                showFullScreen = false
+                            } label: {
+                                Image(systemName: "xmark.circle.fill")
+                                    .resizable()
+                                    .frame(width: 40, height: 40)
+                                    .foregroundColor(.white)
+                                    .padding()
+                            }
+                        }
+                        Spacer()
+                    }
+                }
+            } else {
+                Text("Pas d'image")
+            }
+        }
         .navigationTitle("Nouvelle plante")
-        
+
         //Ajout Image
-        Button{
+        Button {
             showCamera = true
         } label: {
             Label("Plus", systemImage: "photo")
@@ -90,7 +128,6 @@ struct AddPlantView: View {
             CameraScreen(viewModel: photoViewModel)
         }
     }
-   
 }
 
 #Preview {

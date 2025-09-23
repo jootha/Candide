@@ -22,9 +22,30 @@ class PhotoViewModel: ObservableObject, CameraManagerDelegate {
     }
 
     // callback du delegate → on ajoute la photo à la liste photos.
+
     func didCapturePhoto(_ image: UIImage) {
-        DispatchQueue.main.async {
-            self.photos.append(image)
+        let fileName = "plant_\(UUID().uuidString).jpg"
+        if let savedName = saveImageToDocuments(image, fileName: fileName) {
+            DispatchQueue.main.async {
+                self.photos.append(image)
+                globalLastPhotoTaken = savedName
+            }
         }
     }
+
+    
+    //sauvegardes dans le FileManager
+    func saveImageToDocuments(_ image: UIImage, fileName: String) -> String? {
+        guard let data = image.jpegData(compressionQuality: 0.8) else { return nil }
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent(fileName)
+        do {
+            try data.write(to: url)
+            return fileName
+        } catch {
+            print("Erreur sauvegarde : \(error)")
+            return nil
+        }
+    }
+
 }
