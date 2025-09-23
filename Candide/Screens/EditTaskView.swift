@@ -8,10 +8,14 @@
 import SwiftUI
 
 struct EditTaskView: View {
+    @FocusState private var isTextFieldFocused: Bool
     @State var taskDate: Date = Date()
     @ObservedObject var myTask: PlantTask
     @ObservedObject var taskList = taskListGlobalVar
+    @State var repeatInterval: RepeatInterval = .none
     @Environment(\.dismiss) var dismiss
+    @State var tmpName: String
+    @State var tmpTask: Bool
 
     var dateStringFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -22,40 +26,70 @@ struct EditTaskView: View {
 
     var body: some View {
         NavigationView {
-            Form {
-                TextField("Nom de la tâche", text: $myTask.name)
-                
-                DatePicker(
-                    "Date",
-                    selection: $taskDate,
-                    displayedComponents: .date
-                )
-                
-                Toggle("Déjà effectuée", isOn: $myTask.isDone)
+            ZStack {
+                Color.cGreen.ignoresSafeArea()
+
+                Form {
+                    TextField("Nom de la tâche", text: $tmpName)
+                        .focused($isTextFieldFocused)
+                        .onAppear {self.isTextFieldFocused = true}
+                    
+                    DatePicker(
+                        "Date",
+                        selection: Binding(
+                            get: {
+                                dateStringFormatter.date(from: myTask.date) ?? Date()
+                            },
+                            set: { newDate in
+                                myTask.date = dateStringFormatter.string(from: newDate)
+                            }
+                        ),
+                        displayedComponents: .date
+                    )
+                    
+                    Picker("Répétition", selection: $repeatInterval) {
+                        ForEach(RepeatInterval.allCases, id: \.self) { interval in
+                            Text(interval.rawValue).tag(interval)
+                        }
+                    }
+                    
+                    Toggle("Déjà effectuée", isOn: $myTask.isDone)
+                    
+                }
 
             }
+            .scrollContentBackground(.hidden)
             .toolbar {
-//                ToolbarItem(placement: .cancellationAction) {
-//                    Button("Annuler") {
-//                        dismiss()
-//                    }
-//                }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Annuler") {
+                        dismiss()
+                    }
+                }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Enregistrer") {
                         dismiss()
+                        myTask.name = tmpName
                         myTask.date = dateStringFormatter.string(from: taskDate)
-                   }
+                        myTask.isDone = tmpTask
+                    }
                     .disabled(myTask.name.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .tint(.white)
 
                 }
             }
             .navigationTitle("Modifier la tâche")
         }
+        .navigationBarBackButtonHidden(true)
+
     }
 }
 
 #Preview {
+    
     NavigationStack {
         EditTaskView(
-            myTask: taskListGlobalVar.taskList[0]
-        )}}
+            myTask: taskListGlobalVar.taskList[0],
+            tmpName: "Tache Test",
+            tmpTask: false
+        )}
+}

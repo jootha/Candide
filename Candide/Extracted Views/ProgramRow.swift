@@ -11,6 +11,7 @@ struct ProgramRow: View {
     @ObservedObject var task: PlantTask
     var plant: Plant
     @ObservedObject var taskList = taskListGlobalVar
+    @Binding var isChange: Bool
     
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
@@ -25,6 +26,7 @@ struct ProgramRow: View {
                     Spacer()
                     
                     Button {
+                        isChange.toggle()
                         withAnimation(.easeInOut(duration: 0.2)) {
                             if task.isDone {
                                 task.isDone = false
@@ -65,22 +67,56 @@ struct ProgramRow: View {
                 .padding(.horizontal)
                 
                 if let image = plant.imageName {
-                    Image(image)
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(16)
-                        .padding()
-                        .shadow(radius: 5)
+                    ZStack {
+                        Image(image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width:265, height:180)
+                            .clipped()
+                            .cornerRadius(16)
+                            .shadow(radius: 5)
+                            .padding(30)
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Text(plant.name).font(.system(size: 12)).bold()
+                                    .foregroundStyle(.cDarkBlue)
+                                    .padding()
+                                    .background(Color.white.opacity(0.8))
+                                    .cornerRadius(16)
+                                Spacer()
+                            }
+                            
+                        }
+                        .padding(38)
+                        
+                    }
                 } else {
-                    Image("default")
-                        .resizable()
-                        .scaledToFit()
-                        .cornerRadius(16)
-                        .padding()
-                        .shadow(radius: 5)
+                    ZStack {
+                        Image("default")
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width:265, height:180)
+                            .clipped()
+                            .cornerRadius(16)
+                            .shadow(radius: 5)
+                            .padding(30)
+                        HStack {
+                            Spacer()
+                            VStack {
+                                Text(plant.name).font(.system(size: 12)).bold()
+                                    .foregroundStyle(.cDarkBlue)
+                                    .padding()
+                                    .background(Color.white.opacity(0.8))
+                                    .cornerRadius(16)
+                                Spacer()
+                            }
+                            
+                        }.padding(34)
+                    }
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(width:300, height:300)
             .padding()
             .background(Color.cYellow)
             .cornerRadius(24)
@@ -93,6 +129,7 @@ struct ProgramRow: View {
 #Preview {
     ProgramRow(
         task: taskListGlobalVar.taskList[0],
-        plant: plantListGlobalVar.plantList[0]
+        plant: plantListGlobalVar.plantList[1],
+        isChange: .constant(false)
     )
 }

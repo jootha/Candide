@@ -16,8 +16,6 @@ struct AddButton: View {
             switch action {
             case "post":
                 navPath.append(1)
-            //            case "task":
-            //                navPath.append(2)
             default:
                 navPath.append(3)
             }
@@ -35,11 +33,9 @@ struct AddButton: View {
             switch index {
             case 1:
                 AddPostView()
-            //            case 2:
-            //                AddTaskView(plant: plant, navPath: $navPath)
             default:
                 AddPlantView(navPath: $navPath) { newPlant in
-                    plantListGlobalVar.plantList.append(newPlant)
+                    plantListGlobalVar.plantList.insert(newPlant, at: 0)
                 }
             }
         }

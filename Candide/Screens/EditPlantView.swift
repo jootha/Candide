@@ -9,7 +9,8 @@ import SwiftUI
 
 struct EditPlantView: View {
     @ObservedObject var plant: Plant
-    @State var tmpPlantName: String = plantListGlobalVar.plantList[0].name
+    @FocusState private var isTextFieldFocused: Bool
+    @State var tmpPlantName: String
     @State var selectedSoil: SoilType = .wellDrained
     @State var selectedSunLight: Sunlight = .fullSun
     @State var selectedWatering: WateringFrequency = .daily
@@ -17,51 +18,61 @@ struct EditPlantView: View {
 
     var body: some View {
         NavigationView {
-            Form {
-                TextField("**Nom**", text: $plant.name)
-
-                //  IMAGES??t???
-
-                Picker("Ensoleillement", selection: $plant.sunlight) {
-                    ForEach(Sunlight.allCases, id: \.self) { light in
-                        Text(light.rawValue)
+            ZStack {
+                Color.cGreen.ignoresSafeArea()
+                
+                ZStack {
+                    Form {
+                        TextField("**Nom**", text: $tmpPlantName)
+                            .focused($isTextFieldFocused)
+                            .onAppear {self.isTextFieldFocused = true}
+                        
+                        //  IMAGES??t???
+                        
+                        Picker("Ensoleillement", selection: $plant.sunlight) {
+                            ForEach(Sunlight.allCases, id: \.self) { light in
+                                Text(light.rawValue)
+                            }
+                        }
+                        
+                        Picker("Sol", selection: $plant.soilType) {
+                            ForEach(SoilType.allCases, id: \.self) { soil in
+                                Text(soil.rawValue)
+                            }
+                        }
+                        
+                        Picker("Arrosage", selection: $plant.watering) {
+                            ForEach(WateringFrequency.allCases, id: \.self) { soil in
+                                Text(soil.rawValue)
+                            }
+                        }
+                        
+                        Toggle("En Interieur?", isOn: $plant.isIndoor)
+                        
                     }
                 }
-
-                Picker("Type de sol", selection: $plant.soilType) {
-                    ForEach(SoilType.allCases, id: \.self) { soil in
-                        Text(soil.rawValue)
-                    }
-                }
-
-                Picker("Arrosage", selection: $plant.watering) {
-                    ForEach(WateringFrequency.allCases, id: \.self) { soil in
-                        Text(soil.rawValue)
-                    }
-                }
-
-                Toggle("En Interieur?", isOn: $plant.isIndoor)
-
             }
+            .scrollContentBackground(.hidden)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Annuler") {
-                        plant.name = tmpPlantName
                         dismiss()
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Enregistrer") {
+                        plant.name = tmpPlantName
                         plant.soilType = selectedSoil
                         plant.watering = selectedWatering
                         plant.sunlight = selectedSunLight
                         dismiss()
                     }
                     .disabled(plant.name.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .tint(.white)
                 }
             }
         }
     }
 }
 
-#Preview {EditPlantView(plant: plantListGlobalVar.plantList[0])}
+#Preview {EditPlantView(plant: plantListGlobalVar.plantList[0], tmpPlantName: plantListGlobalVar.plantList[0].name)}

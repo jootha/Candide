@@ -84,6 +84,7 @@ class Plant: Identifiable, ObservableObject, Hashable {
     @Published var watering: WateringFrequency
     @Published var sunlight: Sunlight
     @Published var isIndoor: Bool
+    @Published var note: String
 
     init(
         name: String,
@@ -91,7 +92,8 @@ class Plant: Identifiable, ObservableObject, Hashable {
         soilType: SoilType,
         watering: WateringFrequency,
         sunlight: Sunlight,
-        isIndoor: Bool
+        isIndoor: Bool,
+        note: String
     ) {
         self.name = name
         self.imageName = imageName
@@ -99,6 +101,7 @@ class Plant: Identifiable, ObservableObject, Hashable {
         self.watering = watering
         self.sunlight = sunlight
         self.isIndoor = isIndoor
+        self.note = ""
     }
 
     static func == (lhs: Plant, rhs: Plant) -> Bool {
@@ -169,16 +172,25 @@ class PlantListClass: ObservableObject {
 
 class TaskListClass: ObservableObject {
     @Published var taskList: [PlantTask]
-
+    
     init(listTasks: [PlantTask] = taskListInitVar) {
         self.taskList = listTasks
     }
-
+    
     func removeTask(_ myTask: PlantTask) {
         if let index = taskList.firstIndex(where: { $0.id == myTask.id }) {
             taskList.remove(at: index)
         }
     }
+    
+    func pendingTasks(for date: Date) -> [PlantTask] {
+        taskList.filter { $0.date == date.formatted(date: .numeric, time: .omitted) && !$0.isDone }
+    }
+    
+    func doneTasks(for date: Date) -> [PlantTask] {
+        taskList.filter { $0.date == date.formatted(date: .numeric, time: .omitted) && $0.isDone }
+    }
+    
 }
 
 class PostListClass: ObservableObject {

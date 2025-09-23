@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct AddTaskView: View {
+    @FocusState private var isTextFieldFocused: Bool
     @ObservedObject var plant: Plant
     @Binding var navPath: NavigationPath
     @State var taskName: String = ""
@@ -18,23 +19,31 @@ struct AddTaskView: View {
 
     var body: some View {
         NavigationView {
-            Form {
-                TextField("Nom de la tâche", text: $taskName)
+            ZStack {
+                Color.cGreen.ignoresSafeArea()
 
-                DatePicker(
-                    "Date",
-                    selection: $taskDate,
-                    displayedComponents: .date
-                )
-
-                Picker("Répétition", selection: $repeatInterval) {
-                    ForEach(RepeatInterval.allCases, id: \.self) { interval in
-                        Text(interval.rawValue).tag(interval)
+                Form {
+                    TextField("Nom de la tâche", text: $taskName)
+                        .focused($isTextFieldFocused)
+                        .onAppear {self.isTextFieldFocused = true}
+                    
+                    DatePicker(
+                        "Date",
+                        selection: $taskDate,
+                        displayedComponents: .date
+                    )
+                    
+                    Picker("Répétition", selection: $repeatInterval) {
+                        ForEach(RepeatInterval.allCases, id: \.self) { interval in
+                            Text(interval.rawValue).tag(interval)
+                        }
                     }
-                }
+                    
+                    Toggle("Déjà effectuée", isOn: $isDone)
 
-                Toggle("Déjà effectuée", isOn: $isDone)
+                }
             }
+            .scrollContentBackground(.hidden)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Annuler") {
@@ -53,6 +62,8 @@ struct AddTaskView: View {
                         )
                         taskList.taskList.append(newTask)
                     }
+                    .disabled(taskName.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .tint(.white)
                 }
             }
             .navigationTitle("Nouvelle tâche")
