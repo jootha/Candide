@@ -15,6 +15,7 @@ struct PlantView: View {
     @State var showingAlert = false
     @State var showingEditView = false
     @State var showTask = false
+    @State var isChange : Bool = false
     
     var activeTasks: [PlantTask] {
         taskList.taskList.filter { $0.plantID == plant.id && !$0.isDone }
@@ -194,7 +195,7 @@ struct PlantView: View {
                                     Button {
                                         showTask = true
                                     } label: {
-                                        HStack {
+                                        HStack(spacing: 6) {
                                             
                                             Text("Ajouter une tâche")
                                             
@@ -210,14 +211,15 @@ struct PlantView: View {
                                             }
                                             
                                         }
-                                        .font(.subheadline.bold())
-                                        .padding(.horizontal, 16)
-                                        .padding(.vertical, 2)
+                                        .font(.headline.bold())
+                                        .padding(.horizontal, 18)
+                                        .padding(.vertical, 3)
                                         .background(Color.cDarkBlue)
                                         .foregroundColor(.cOrange)
                                         .cornerRadius(16)
+                                        .shadow(radius: 1)
                                     }
-                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                     .sheet(isPresented: $showTask) {
                                         AddTaskView(plant: plant, navPath: $navPath)
                                     }
@@ -225,7 +227,8 @@ struct PlantView: View {
                             }
                             ScrollView(showsIndicators: false) {
                                 ForEach(activeTasks) { myTask in
-                                    PlantRowTask(myTask: myTask/*, isChange: $isChange*/)
+                                    PlantRowTask(myTask: myTask) {
+                                        isChange.toggle() }
                                         .frame(maxWidth: .infinity, alignment: .leading)
                                         .padding(.vertical, 6)
                                         .cornerRadius(12)
@@ -298,7 +301,7 @@ struct PlantView: View {
 
 #Preview {
     PlantView(
-        plant: plantListGlobalVar.plantList[0],
+        plant: plantListGlobalVar.plantList[3],
         taskList: taskListGlobalVar,
         navPath: .constant(NavigationPath())
     )

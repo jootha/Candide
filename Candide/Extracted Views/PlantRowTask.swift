@@ -11,6 +11,7 @@ struct PlantRowTask: View {
 
     @ObservedObject var myTask: PlantTask
     @State private var showEdit = false
+    var onToggle: (() -> Void)? = nil
 
     var body: some View {
 
@@ -29,6 +30,7 @@ struct PlantRowTask: View {
 
                         Button {
                             myTask.isDone.toggle()
+                            onToggle?()
                         } label: {
                             ZStack {
                                 Image(systemName: "circle.fill")
