@@ -20,7 +20,9 @@ struct GardenPlanteFrame: View {
                 if let uiImage = UIImage(contentsOfFile: url.path) {
                     Image(uiImage: uiImage)
                         .resizable()
-                        .scaledToFit()
+                        .scaledToFill()
+                        .frame(width:370, height:250)
+                        .clipped()
                         .cornerRadius(16)
                         .padding(-8)
                         .overlay(alignment: .topTrailing) {
@@ -30,19 +32,24 @@ struct GardenPlanteFrame: View {
                     if let image = plant.imageName {
                         Image(image)
                             .resizable()
-                            .scaledToFit()
+                            .scaledToFill()
+                            .frame(width:370, height:250)
+                            .clipped()
                             .cornerRadius(16)
                             .padding(-8)
                             .overlay(alignment: .topTrailing) {
                                 TrashButton(plant: plant)
                             }
+
                     }
                 }
 
             } else {
                 Image("default")
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
+                    .frame(width:370, height:250)
+                    .clipped()
                     .cornerRadius(16)
                     .padding(-8)
                     //.offset(x: -100, y: 50)

@@ -20,7 +20,7 @@ struct ProgramRow: View {
                 .frame(width: 10, height: 10)
                 .padding(.top, 38)
             
-            VStack {
+            VStack(spacing: 12) {
                 HStack {
                     Text(task.name)
                     Spacer()
@@ -33,10 +33,8 @@ struct ProgramRow: View {
                             } else {
                                 task.isDone = true
                                 if let nextDate = task.nextDate(),
-                                   task.repeatInterval != .none
-                                {
-                                    let newDateString =
-                                    taskDateFormatter.string(from: nextDate)
+                                   task.repeatInterval != .none {
+                                    let newDateString = taskDateFormatter.string(from: nextDate)
                                     let repeatedTask = PlantTask(
                                         name: task.name,
                                         date: newDateString,
@@ -44,7 +42,6 @@ struct ProgramRow: View {
                                         plantID: task.plantID,
                                         repeatInterval: task.repeatInterval
                                     )
-                                    
                                     taskList.taskList.append(repeatedTask)
                                 }
                             }
@@ -53,11 +50,8 @@ struct ProgramRow: View {
                         ZStack {
                             Image(systemName: "circle.fill")
                                 .foregroundStyle(.gray.opacity(0.3))
-                            Image(
-                                systemName: task.isDone
-                                ? "checkmark.circle.fill" : "circle"
-                            )
-                            .foregroundColor(task.isDone ? .cGreen : .gray)
+                            Image(systemName: task.isDone ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(task.isDone ? .cGreen : .gray)
                         }
                     }
                 }
@@ -66,57 +60,33 @@ struct ProgramRow: View {
                 .cornerRadius(8)
                 .padding(.horizontal)
                 
-                if let image = plant.imageName {
-                    ZStack {
-                        Image(image)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width:265, height:180)
-                            .clipped()
-                            .cornerRadius(16)
-                            .shadow(radius: 5)
-                            .padding(30)
-                        HStack {
+                ZStack {
+                    Image(plant.imageName ?? "default")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 250, height: 180)
+                        .clipped()
+                        .cornerRadius(16)
+                        .shadow(radius: 5)
+                        .padding(.bottom, 12)
+                    
+                    HStack {
+                        Spacer()
+                        VStack {
+                            Text(plant.name)
+                                .font(.system(size: 16))
+                                .bold()
+                                .foregroundStyle(.cDarkBlue)
+                                .padding(6)
+                                .background(Color.white.opacity(0.8))
+                                .cornerRadius(12)
                             Spacer()
-                            VStack {
-                                Text(plant.name).font(.system(size: 12)).bold()
-                                    .foregroundStyle(.cDarkBlue)
-                                    .padding()
-                                    .background(Color.white.opacity(0.8))
-                                    .cornerRadius(16)
-                                Spacer()
-                            }
-                            
                         }
-                        .padding(38)
-                        
                     }
-                } else {
-                    ZStack {
-                        Image("default")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width:265, height:180)
-                            .clipped()
-                            .cornerRadius(16)
-                            .shadow(radius: 5)
-                            .padding(30)
-                        HStack {
-                            Spacer()
-                            VStack {
-                                Text(plant.name).font(.system(size: 12)).bold()
-                                    .foregroundStyle(.cDarkBlue)
-                                    .padding()
-                                    .background(Color.white.opacity(0.8))
-                                    .cornerRadius(16)
-                                Spacer()
-                            }
-                            
-                        }.padding(34)
-                    }
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 12)
                 }
             }
-            .frame(width:300, height:300)
             .padding()
             .background(Color.cYellow)
             .cornerRadius(24)
