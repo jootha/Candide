@@ -96,8 +96,8 @@ struct PlantView: View {
                             }
                             .alert(isPresented: $showingAlert) {
                                 Alert(
-                                    title: Text("Achtung!"),
-                                    message: Text("Etes-vous sûr de sûr de vouloir supprimer cette petite plante toute choupinou ?"),
+                                    title: Text("Supprimer ?"),
+                                    message: Text("Etes-vous sûr de vouloir supprimer cette plante ?"),
                                     primaryButton: .destructive(Text("Supprimer")) {
                                         navPath.removeLast()
                                         plantList.removePlant(plant)
