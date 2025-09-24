@@ -72,6 +72,8 @@ var plantListInitVar: [Plant] = [
     ),
 ]
 
+var globalLastPhotoTaken : String = ""
+
 // IDs utiles
 let lavandeID  = plantListInitVar.first(where: { $0.name == "Lavande" })?.id
 let basilicID  = plantListInitVar.first(where: { $0.name == "Basilic" })?.id

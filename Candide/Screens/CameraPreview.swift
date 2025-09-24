@@ -28,14 +28,16 @@ struct CameraPreview: UIViewRepresentable {//permet d’insérer une vue UIKit
 struct CameraScreen: View {
     //observes le PhotoViewModel
     @ObservedObject var viewModel: PhotoViewModel
+    //Fermer la modal
+    @Environment(\.dismiss) private var dismiss
+
+    
 
     var body: some View {
         ZStack {
             if let layer = viewModel.cameraManager.previewLayer {
                 CameraPreview(layer: layer)
                     .ignoresSafeArea()
-            } else {
-                Color.cPink.ignoresSafeArea()
             }
 
             VStack {
@@ -44,6 +46,7 @@ struct CameraScreen: View {
                 //Bouton prendre une photo
                 Button(action: {
                     viewModel.takePhoto()
+                    dismiss()   //ferme la modal
                 }) {
                     Circle()
                         .fill(Color.white)
@@ -51,22 +54,6 @@ struct CameraScreen: View {
                         .padding()
                         .shadow(radius: 5)
                 }
-
-                // Liste des photos capturées
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(viewModel.photos.indices, id: \.self) { index in
-                            Image(uiImage: viewModel.photos[index])
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 100, height: 100)
-                                .clipped()
-                                .cornerRadius(12)
-                        }
-                    }
-                    .padding()
-                }
-                .background(Color.black.opacity(0.3))
             }
         }.onAppear {
             viewModel.cameraManager.startSession()
