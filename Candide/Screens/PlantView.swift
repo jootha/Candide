@@ -23,13 +23,27 @@ struct PlantView: View {
             ScrollView {
                 VStack {
                     ZStack {
-                        //  IMAGE
-                        if let image = plant.imageName {
-                            Image(image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(maxWidth: .infinity, maxHeight: 256)
-                                .clipped()
+                        if let name = plant.imageName {
+                            let url = FileManager.default.urls(for: .documentDirectory,in: .userDomainMask)[0]
+                                .appendingPathComponent(name)
+                            
+                            if let uiImage = UIImage(contentsOfFile: url.path) {
+                                Image(uiImage: uiImage)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(maxWidth: .infinity, maxHeight: 256)
+                                    .clipped()
+                            } else {
+                                if let image = plant.imageName {
+                                    Image(image)
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(maxWidth: .infinity, maxHeight: 256)
+                                        .clipped()
+
+                                }
+                            }
+
                         } else {
                             Image("default")
                                 .resizable()
@@ -264,7 +278,7 @@ struct PlantView: View {
 
 #Preview {
     PlantView(
-        plant: plantListGlobalVar.plantList[1],
+        plant: plantListGlobalVar.plantList[2],
         taskList: taskListGlobalVar,
         navPath: .constant(NavigationPath())
     )
