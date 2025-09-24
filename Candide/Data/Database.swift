@@ -15,14 +15,16 @@ var plantListInitVar: [Plant] = [
         soilType: .calcareous,
         watering: .every10Days,
         sunlight: .fullSun,
-        isIndoor: false
+        isIndoor: false,
+        note: "..."
     ),
     Plant(
         name: "Tomate",
         soilType: .rich,
         watering: .every2Days,
         sunlight: .fullSun,
-        isIndoor: false
+        isIndoor: false,
+        note: "..."
     ),
     Plant(
         name: "Aloe Vera",
@@ -30,14 +32,16 @@ var plantListInitVar: [Plant] = [
         soilType: .cactusMix,
         watering: .biweekly,
         sunlight: .indirectLight,
-        isIndoor: true
+        isIndoor: true,
+        note: "..."
     ),
     Plant(
         name: "Ficus",
         soilType: .wellDrained,
         watering: .weekly,
         sunlight: .indirectLight,
-        isIndoor: true
+        isIndoor: true,
+        note: "..."
     ),
     Plant(
         name: "Basilic",
@@ -45,7 +49,8 @@ var plantListInitVar: [Plant] = [
         soilType: .rich,
         watering: .every2Days,
         sunlight: .fullSun,
-        isIndoor: false
+        isIndoor: false,
+        note: "..."
     ),
     Plant(
         name: "Monstera",
@@ -53,7 +58,8 @@ var plantListInitVar: [Plant] = [
         soilType: .wellDrained,
         watering: .weekly,
         sunlight: .mediumLight,
-        isIndoor: true
+        isIndoor: true,
+        note: "..."
     ),
     Plant(
         name: "Romarin",
@@ -61,7 +67,8 @@ var plantListInitVar: [Plant] = [
         soilType: .dry,
         watering: .weekly,
         sunlight: .fullSun,
-        isIndoor: false
+        isIndoor: false,
+        note: "..."
     ),
 ]
 
@@ -99,7 +106,6 @@ var comments = [
         author: users[2]
     ),
 ]
-
 
 var posts: [Post] = [
     Post(
@@ -190,14 +196,6 @@ var posts: [Post] = [
         filter: .airPurifier,
         comments: []
     ),
-]
-
-
-/// Liste 1 : instantanée au 26/09/2025
-var tasks: [PlantTask] = [
-    PlantTask(name: "Arroser",               date: "26/09/2025", isDone: false, plantID: lavandeID!),
-    PlantTask(name: "Rajouter de l'engrais", date: "26/09/2025", isDone: true,  plantID: aloeveraID!),
-    PlantTask(name: "Tailler",               date: "26/09/2025", isDone: false, plantID: ficusID!)
 ]
 
 /// Liste 2 : jeu d’exemple au 26/09/2025
@@ -296,5 +294,6 @@ let defaultPlant = Plant(
     soilType: .wellDrained,   // premier de SoilType
     watering: .daily,         // premier de WateringFrequency
     sunlight: .fullSun,       // premier de Sunlight
-    isIndoor: true
+    isIndoor: true,
+    note:"..."
 )

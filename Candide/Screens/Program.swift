@@ -11,26 +11,34 @@ struct Program: View {
 
     @ObservedObject var taskList = taskListGlobalVar
     @State var selectedDate: Date = Date()
-    var filteredTasks: [PlantTask] {
-        taskList.taskList.filter {
-            $0.date == selectedDate.formatted(date: .numeric, time: .omitted)
-        }
-    }
 
+    var todayString: String {
+        return selectedDate.formatted(date: .numeric, time: .omitted)
+    }
+    var pending : [PlantTask] {
+        return taskList.pendingTasks(for: selectedDate)
+        
+    }
+    var done : [PlantTask] {
+        return taskList.doneTasks(for: selectedDate)
+    }
+    
+    @State var isChange: Bool = false
+    
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.cGreen
-                    .ignoresSafeArea()
+                Color.cGreen.ignoresSafeArea()
+
                 VStack {
-                    //  Date et tâches
+                    // Navigation par date
                     DateNavigationView(selectedDate: $selectedDate)
                         .background(Color.white.opacity(0.2))
                         .cornerRadius(16)
                         .padding()
 
                     HStack {
-                        Text("Mes tâches")
+                        Text("Mes tâches à faire")
                             .padding(10)
                             .font(.subheadline)
                             .background(Color.cYellow)
@@ -39,6 +47,7 @@ struct Program: View {
                             .padding(.horizontal)
                         Spacer()
                     }
+
                     ZStack(alignment: .topLeading) {
                         VStack {
                             Rectangle()
@@ -50,45 +59,74 @@ struct Program: View {
                         .padding(.top)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                        if filteredTasks.isEmpty {
+                        ScrollView(showsIndicators: false) {
 
-                            HStack {
-                                Spacer()
-                                Image(systemName: "cloud.sun.fill")
-                                    .padding()
-                                Text("Rien à faire pour aujourd’hui !")
-                                    .font(.headline)
-                                Spacer()
-                            }.foregroundColor(.cYellow).padding(.vertical, 40)
+                            if pending.isEmpty && done.isEmpty {
+                                HStack {
+                                    Spacer()
+                                    Image(systemName: "cloud.sun.fill")
+                                        .padding()
+                                    Text("Rien à faire pour aujourd’hui !")
+                                        .font(.headline)
+                                    Spacer()
+                                }
+                                .foregroundColor(.cYellow)
+                                .padding(.vertical, 40)
                                 .transition(.opacity.combined(with: .scale))
-
-                        } else {
-                            //     Liste des tasks
-                            ScrollView(showsIndicators: false) {
-                                ForEach(filteredTasks) {
-                                    myTask in
-
+                            } else {
+                                ForEach(pending) { myTask in
                                     if let plant = plantListGlobalVar.plantList
-                                            .first(where: {
-                                                $0.id == myTask.plantID
-                                            })
+                                        .first(where: {
+                                            $0.id == myTask.plantID
+                                        })
                                     {
-                                        ProgramRow(
-                                            task: myTask,
-                                            plant: plant
-                                        )
-
+                                        ProgramRow(task: myTask, plant: plant, isChange: $isChange)
+                                            
                                     }
                                 }
-                            }.transition(.move(edge: .leading))
-                        }
-                    }
 
+                                if !done.isEmpty {
+                                    HStack {
+                                        Text("Tâches effectuées")
+                                            .padding(10)
+                                            .font(.subheadline)
+                                            .background(Color.cYellow)
+                                            .cornerRadius(16)
+                                            .shadow(radius: 2)
+                                            .padding(.horizontal)
+                                        Spacer()
+                                    }.padding(.top,30)
+                                        .padding(.leading, 20)
+
+                                    ForEach(done) { myTask in
+                                        if let plant = plantListGlobalVar
+                                            .plantList.first(where: {
+                                                $0.id == myTask.plantID
+                                            })
+                                        {
+                                            ProgramRow(
+                                                task: myTask,
+                                                plant: plant,
+                                                isChange: $isChange
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .transition(.move(edge: .leading))
+                        
+                    }
+                    .id(isChange)
                 }
                 .padding(.horizontal, 30)
-
             }
-            //            Nav Bar
+//            .onChange(of: isChange){ new in
+//              //  pending = taskList.pendingTasks(for: selectedDate)
+//                print(isChange.description)
+//            }
+
+            // Nav bar
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
@@ -100,9 +138,7 @@ struct Program: View {
             }
             .toolbarBackground(.cDarkBlue, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .animation(.easeInOut(duration: 0.2), value: filteredTasks.count)
         }
-
     }
 }
 

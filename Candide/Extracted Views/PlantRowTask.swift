@@ -1,62 +1,59 @@
 //
-//  PlantRowAlert.swift
+//  PlantRowTask.swift
 //  Candide
 //
-//  Created by apprenant90 on 18/09/2025.
+//  Created by apprenant90 on 23/09/2025.
 //
 
 import SwiftUI
 
-struct PlantRowAlert: View {
+struct PlantRowTask: View {
+
     @ObservedObject var myTask: PlantTask
     @State private var showEdit = false
 
     var body: some View {
-        
-        HStack(alignment: .top, spacing: 16) {
+
+        HStack() {
             Button {
                 showEdit = true
             } label: {
-                Circle()
-                    .fill(Color.cYellow)
-                    .frame(width: 10, height: 10)
-                    .padding(.top, 38)
-
                 VStack {
-                    HStack {
+                    HStack(alignment: .center) {
                         TrashTaskButton(myTask: myTask)
+
                         Text(myTask.name)
+                            .font(.headline)
+
                         Spacer()
+
                         Button {
                             myTask.isDone.toggle()
                         } label: {
                             ZStack {
                                 Image(systemName: "circle.fill")
                                     .foregroundStyle(.gray.opacity(0.3))
-                                Image(
-                                    systemName: myTask.isDone
-                                        ? "checkmark.circle.fill" : "circle"
-                                )
-                                .foregroundColor(
-                                    myTask.isDone ? .cGreen : .gray
-                                )
+
+                                Image(systemName: myTask.isDone ? "checkmark.circle.fill" : "circle")
+                                    .foregroundColor(myTask.isDone ? .cGreen : .gray)
                             }
                         }
                     }
                     .padding()
                     .background(Color.cPink)
                     .cornerRadius(8)
-                    .padding(.horizontal)
                 }
-                .padding(.vertical, 8)
-
-                Spacer()
+                .padding(.horizontal)
             }
             .navigationDestination(isPresented: $showEdit) {
-                EditTaskView(myTask: myTask)
+                EditTaskView(
+                    myTask: myTask,
+                    tmpName: "",
+                    tmpTask: false
+                )
             }
         }
     }
 }
 
-#Preview {PlantRowAlert(myTask: taskListGlobalVar.taskList[0])}
+#Preview {PlantRowTask(myTask: taskListGlobalVar.taskList[0])}

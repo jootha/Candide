@@ -13,12 +13,22 @@ struct PlantRowInfo: View {
     var plantIco: String
 
     var body: some View {
-        HStack(alignment: .top, spacing: 16) {
-            Text(plantIco + " ")
-            Text(plantText + ": ")
-            Text(plantValue)
+
+        HStack(alignment: .top, spacing: 8) {
+            Text(plantIco)
+                .font(.system(size: 24))
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(plantText + ":")
+                    .font(.footnote)
+                    .bold()
+                Text(plantValue)
+                    .font(.footnote)
+            }
+
+            Spacer()
         }
-        .frame(maxWidth: .infinity)
+        .frame(height:10, alignment: .leading)
         .padding()
         .background(Color.cPink)
         .cornerRadius(8)
@@ -26,4 +36,4 @@ struct PlantRowInfo: View {
     }
 }
 
-#Preview { PlantRowInfo(plantValue: "0", plantText: "toto", plantIco: "plus") }
+#Preview { PlantRowInfo(plantValue: "Youpiiiiiiiiiii tous les 10jrs...", plantText: "Detailssssssss", plantIco: "🌱") }

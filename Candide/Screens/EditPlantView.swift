@@ -9,7 +9,8 @@ import SwiftUI
 
 struct EditPlantView: View {
     @ObservedObject var plant: Plant
-    @State var tmpPlantName: String = plantListGlobalVar.plantList[0].name
+    @FocusState private var isTextFieldFocused: Bool
+    @State var tmpPlantName: String
     @State var selectedSoil: SoilType = .wellDrained
     @State var selectedSunLight: Sunlight = .fullSun
     @State var selectedWatering: WateringFrequency = .daily
@@ -140,6 +141,7 @@ struct EditPlantView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Enregistrer") {
+                        plant.name = tmpPlantName
                         plant.soilType = selectedSoil
                         plant.imageName = globalLastPhotoTaken.isEmpty ? nil : globalLastPhotoTaken
                         plant.watering = selectedWatering
@@ -148,10 +150,11 @@ struct EditPlantView: View {
                         dismiss()
                     }
                     .disabled(plant.name.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .tint(.white)
                 }
             }
         }
     }
 }
 
-#Preview {EditPlantView(plant: plantListGlobalVar.plantList[0])}
+#Preview {EditPlantView(plant: plantListGlobalVar.plantList[0], tmpPlantName: plantListGlobalVar.plantList[0].name)}

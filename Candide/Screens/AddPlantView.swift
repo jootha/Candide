@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct AddPlantView: View {
+    @FocusState private var isTextFieldFocused: Bool
     @State private var name: String = ""
     @State private var soilType: SoilType = .wellDrained
     @State private var watering: WateringFrequency = .daily
@@ -22,27 +23,72 @@ struct AddPlantView: View {
     @State private var showFullScreen = false
 
     var body: some View {
-        Form {
-            TextField("**Nom**", text: $name)
-            Picker("Ensoleillement", selection: $sunlight) {
-                ForEach(Sunlight.allCases, id: \.self) { light in
-                    Text(light.rawValue)
-                }
-            }
+        ZStack {
+            Color.gray.opacity(0.1)
+            ZStack {
+                Form {
+                    VStack {
+                        TextField("**Nom**", text: $name)
+                            .focused($isTextFieldFocused)
+                            .onAppear {self.isTextFieldFocused = true}
+                        
+                        //  IMAGES??t???
+                        
+                        Picker("Ensoleillement", selection: $sunlight) {
+                            ForEach(Sunlight.allCases, id: \.self) { light in
+                                Text(light.rawValue)
+                            }
+                        }
+                        
+                        Picker("Type de sol", selection: $soilType) {
+                            ForEach(SoilType.allCases, id: \.self) { soil in
+                                Text(soil.rawValue)
+                            }
+                        }
+                        
+                        Picker("Arrosage", selection: $watering) {
+                            ForEach(WateringFrequency.allCases, id: \.self) { water in
+                                Text(water.rawValue)
+                            }
+                        }
+                        
+                        Toggle("En Interieur?", isOn: $isIndoor)
+                        
+                        ForEach(photoViewModel.photos.indices, id: \.self) { index in
+                            Image(uiImage: photoViewModel.photos[index])
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 100, height: 100)
+                                .clipped()
+                                .cornerRadius(12)
+                        }
+                    }
+                    .background(Color.cYellow.opacity(0.3), in: RoundedRectangle(cornerRadius: 12))
+                }.scrollContentBackground(.hidden)
 
-            Picker("Type de sol", selection: $soilType) {
-                ForEach(SoilType.allCases, id: \.self) { soil in
-                    Text(soil.rawValue)
-                }
             }
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Enregistrer") {
+                        let newPlant = Plant(
+                            name: name,
+                            soilType: soilType,
+                            watering: watering,
+                            sunlight: sunlight,
+                            isIndoor: isIndoor,
+                            note:"..."
+                        )
+                        
+                        onSave(newPlant)
+                        navPath.removeLast()
+                    }
+                    .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .tint(.white)
 
-            Picker("Arrosage", selection: $watering) {
-                ForEach(WateringFrequency.allCases, id: \.self) { water in
-                    Text(water.rawValue)
                 }
-            }
 
-            Toggle("En Interieur?", isOn: $isIndoor)
+            }
+            .navigationTitle("Nouvelle plante")
             
             Image(uiImage: photoViewModel.photo)
                 .resizable()
