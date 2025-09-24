@@ -57,19 +57,19 @@ struct EditPlantView: View {
     var body: some View {
         NavigationView {
             Form {
-                TextField("**Nom**", text: $plant.name)
+                TextField("**Nom**", text: $tmpPlantName)
                 //  IMAGES??t???
-                Picker("Ensoleillement", selection: $plant.sunlight) {
+                Picker("Ensoleillement", selection: $selectedSunLight) {
                     ForEach(Sunlight.allCases, id: \.self) { light in
                         Text(light.rawValue)
                     }
                 }
-                Picker("Type de sol", selection: $plant.soilType) {
+                Picker("Type de sol", selection: $selectedSoil) {
                     ForEach(SoilType.allCases, id: \.self) { soil in
                         Text(soil.rawValue)
                     }
                 }
-                Picker("Arrosage", selection: $plant.watering) {
+                Picker("Arrosage", selection: $selectedWatering) {
                     ForEach(WateringFrequency.allCases, id: \.self) { soil in
                         Text(soil.rawValue)
                     }
@@ -165,13 +165,6 @@ struct EditPlantView: View {
                 print(globalLastPhotoTaken)
             }
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Annuler") {
-                        plant.name = tmpPlantName
-                        globalLastPhotoTaken = ""
-                        dismiss()
-                    }
-                }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Enregistrer") {
                         plant.name = tmpPlantName

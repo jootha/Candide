@@ -15,11 +15,15 @@ struct PlantView: View {
     @State var showingAlert = false
     @State var showingEditView = false
     @State var showTask = false
+    @State var isChange : Bool = false
     
+    var activeTasks: [PlantTask] {
+        taskList.taskList.filter { $0.plantID == plant.id && !$0.isDone }
+    }
+
     var body: some View {
         ZStack {
             Color.cGreen.ignoresSafeArea()
-
             ScrollView {
                 VStack {
                     ZStack {
@@ -32,6 +36,7 @@ struct PlantView: View {
                                     .resizable()
                                     .scaledToFill()
                                     .frame(maxWidth: .infinity, maxHeight: 256)
+                                    .shadow(radius:5)
                                     .clipped()
                             } else {
                                 if let image = plant.imageName {
@@ -39,24 +44,24 @@ struct PlantView: View {
                                         .resizable()
                                         .scaledToFill()
                                         .frame(maxWidth: .infinity, maxHeight: 256)
+                                        .shadow(radius:5)
                                         .clipped()
-
                                 }
                             }
-
                         } else {
                             Image("default")
                                 .resizable()
                                 .scaledToFill()
                                 .frame(maxWidth: .infinity, maxHeight: 256)
+                                .shadow(radius:5)
                                 .clipped()
                         }
                     }
                     .overlay(alignment: .bottomLeading) {
+                        
                         //  BOUTTONS
                         HStack {
                             Spacer ()
-            
                             //  MODIF PLANT
                             Button {
                                 showingEditView.toggle()
@@ -64,7 +69,6 @@ struct PlantView: View {
                                 ZStack {
                                     Circle().frame(width: 48)
                                         .foregroundColor(.cDarkBlue)
-                                    
                                     Image(systemName: "pencil.circle")
                                         .opacity(0.8)
                                         .foregroundColor(.cOrange)
@@ -92,8 +96,8 @@ struct PlantView: View {
                             }
                             .alert(isPresented: $showingAlert) {
                                 Alert(
-                                    title: Text("Achtung!"),
-                                    message: Text("Etes-vous sûr de sûr de vouloir supprimer cette petite plante toute choupinou ?"),
+                                    title: Text("Supprimer ?"),
+                                    message: Text("Etes-vous sûr de vouloir supprimer cette plante ?"),
                                     primaryButton: .destructive(Text("Supprimer")) {
                                         navPath.removeLast()
                                         plantList.removePlant(plant)
@@ -103,7 +107,7 @@ struct PlantView: View {
                             }
                         }
                         .padding()
-
+                        
                         Spacer()
                     }
                     
@@ -112,17 +116,19 @@ struct PlantView: View {
                         VStack {
                             HStack {
                                 Text("Informations: ")
-                                    .padding(10)
-                                    .font(.subheadline)
+                                    .font(.headline)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
                                     .background(Color.cYellow)
-                                    .cornerRadius(16)
+                                    .cornerRadius(12)
+                                    .shadow(radius: 2)
                                     .padding(.horizontal, 30)
                                     .shadow(radius: 2)
                                 
                                 Spacer()
                             }
                             .padding(.top, 16)
-
+                            
                             ScrollView(showsIndicators: false) {
                                 VStack {
                                     PlantRowInfo(
@@ -156,11 +162,14 @@ struct PlantView: View {
                                             plantIco: "🌳"
                                         )
                                     }
-
+                                    
                                 }
-                                .padding(.vertical, 8)
-                                .background(.cYellow)
-                                .cornerRadius(10)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 16)
+                                .background(Color.cYellow)
+                                .cornerRadius(16)
+                                .shadow(radius: 2)
+                                
                             }
                             .frame(maxWidth: .infinity)
                             .padding(.horizontal, 30)
@@ -171,20 +180,22 @@ struct PlantView: View {
                             HStack {
                                 HStack {
                                     Text("Tâches: ")
-                                        .padding(10)
-                                        .font(.subheadline)
+                                        .font(.headline)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
                                         .background(Color.cYellow)
-                                        .cornerRadius(16)
+                                        .cornerRadius(12)
+                                        .shadow(radius: 2)
                                         .padding(.horizontal, 30)
                                         .shadow(radius: 2)
                                     
                                 }
-
+                                
                                 HStack() {
                                     Button {
                                         showTask = true
                                     } label: {
-                                        HStack {
+                                        HStack(spacing: 6) {
                                             
                                             Text("Ajouter une tâche")
                                             
@@ -200,69 +211,81 @@ struct PlantView: View {
                                             }
                                             
                                         }
-                                        .padding(.horizontal, 16)
-                                        .background(.cDarkBlue)
-                                        .foregroundStyle(.cOrange)
+                                        .font(.headline.bold())
+                                        .padding(.horizontal, 18)
+                                        .padding(.vertical, 3)
+                                        .background(Color.cDarkBlue)
+                                        .foregroundColor(.cOrange)
                                         .cornerRadius(16)
+                                        .shadow(radius: 1)
                                     }
-                                    .frame(maxWidth: .infinity, alignment: .center)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                                     .sheet(isPresented: $showTask) {
                                         AddTaskView(plant: plant, navPath: $navPath)
                                     }
                                 }
                             }
                             ScrollView(showsIndicators: false) {
-                                ForEach(taskList.taskList) { myTask in
-                                    if plant.id == myTask.plantID {
-                                        PlantRowTask(myTask: myTask)
-                                    }
+                                ForEach(activeTasks) { myTask in
+                                    PlantRowTask(myTask: myTask) {
+                                        isChange.toggle() }
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                        .padding(.vertical, 6)
+                                        .cornerRadius(12)
+                                        .shadow(radius: 1)
+                                        .padding(.horizontal, 10)
                                 }
                                 .padding(.vertical, 8)
-                                .background(.cYellow)
-                                .cornerRadius(10)
+                                .background(Color.cYellow)
+                                .cornerRadius(16)
+                                .shadow(radius: 2)
+
                             }
                             .frame(maxWidth: .infinity, maxHeight: 172)
                             .padding(.horizontal, 30)
                         }
                         .padding(.top, 16)
-
+                        
                         //  NOTE
                         VStack {
                             HStack {
                                 Text("Note: ")
-                                    .padding(10)
-                                    .font(.subheadline)
+                                    .font(.headline)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
                                     .background(Color.cYellow)
-                                    .cornerRadius(16)
+                                    .cornerRadius(12)
+                                    .shadow(radius: 2)
                                     .padding(.horizontal, 30)
                                     .shadow(radius: 2)
                                 
                                 Spacer()
-
+                                
                             }
                             
                             TextEditor(text: $plant.note)
                                 .scrollContentBackground(.hidden)
-                                .background(Color.cYellow)
-                                .cornerRadius(10)
                                 .padding()
+                                .background(Color.cYellow)
+                                .cornerRadius(16)
+                                .shadow(radius: 2)
                                 .frame(height: 200)
                                 .padding(.horizontal, 30)
-
+                            
                             Spacer()
-
+                            
                         }
                         .padding(.top, 16)
-
+                        
                     }
                 }
             }
             .padding(.top, 0)
-
+            
         }
         .navigationTitle(plant.name)
         .navigationBarTitleDisplayMode(.inline)
-
+        
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(plant.name)
@@ -278,7 +301,7 @@ struct PlantView: View {
 
 #Preview {
     PlantView(
-        plant: plantListGlobalVar.plantList[2],
+        plant: plantListGlobalVar.plantList[3],
         taskList: taskListGlobalVar,
         navPath: .constant(NavigationPath())
     )
