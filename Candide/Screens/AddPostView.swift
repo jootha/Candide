@@ -7,7 +7,7 @@ struct AddPostView: View {
     @State var description = ""
     @State var contentText = ""
     @State var selectedFilter: Filter = .beginnerFriendly
-    @State var selectedSymbol = "plant.fill"
+    @State var selectedSymbol = "humidity.fill"
     @State var showingSymbolPicker = false
     
     var body: some View {
@@ -150,7 +150,7 @@ struct AddPostView: View {
                         dismiss()
                     }
                 }
-                
+
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Publier") {
                         let newPost = Post(

@@ -110,7 +110,7 @@ var comments = [
 var posts: [Post] = [
     Post(
         title: "Comment arroser vos plantes efficacement",
-        image: "plant.fill",
+        image: "humidity.fill",
         contentText: "L'arrosage est crucial pour la santé de vos plantes...",
         description: "Conseils d’arrosage pour plantes d’intérieur",
         author: users[0],
