@@ -18,7 +18,7 @@ struct ForumView: View {
                     HStack {
                         Spacer()
                         
-                        Text("Ajouter une tâche")
+                        Text("Ajouter un post")
                         .padding(.vertical, 8)
                         .padding(.horizontal, 4)
                         .foregroundStyle(.cOrange)

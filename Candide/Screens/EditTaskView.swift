@@ -151,7 +151,7 @@ struct EditTaskView: View {
                         dismiss()
                     }
                     .disabled(myTask.name.trimmingCharacters(in: .whitespaces).isEmpty)
-                    .tint(.white)
+                    .tint(.cYellow)
                 }
             }
             .navigationTitle("Modifier la tâche")

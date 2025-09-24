@@ -42,7 +42,17 @@ struct AddPlantView: View {
                 .padding(.top, 16)
 
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: 16) {
+                    VStack(alignment: .leading, spacing: 12) {
+                        
+                        Text("Nom de la tâche")
+                            .font(.headline)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.cYellow)
+                            .cornerRadius(12)
+                            .shadow(radius: 2)
+                            .padding(.horizontal)
+                        
                         TextField("**Nom**", text: $name)
                             .padding()
                             .frame(height: 50)
@@ -51,7 +61,15 @@ struct AddPlantView: View {
                             .cornerRadius(8)
                             .foregroundStyle(.cDarkBlue)
                             .padding(.horizontal, 30)
-
+                        
+                        Text("Ensoleillement")
+                            .font(.headline)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.cYellow)
+                            .cornerRadius(12)
+                            .shadow(radius: 2)
+                            .padding(.horizontal)
                         Picker("Ensoleillement", selection: $sunlight) {
                             ForEach(Sunlight.allCases, id: \.self) { light in
                                 Text(light.rawValue)
@@ -66,6 +84,15 @@ struct AddPlantView: View {
                         .foregroundStyle(.cDarkBlue)
                         .padding(.horizontal, 30)
 
+                        Text("Type de sol")
+                            .font(.headline)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.cYellow)
+                            .cornerRadius(12)
+                            .shadow(radius: 2)
+                            .padding(.horizontal)
+                         
                         Picker("Type de sol", selection: $soilType) {
                             ForEach(SoilType.allCases, id: \.self) { soil in
                                 Text(soil.rawValue)
@@ -79,7 +106,16 @@ struct AddPlantView: View {
                         .cornerRadius(8)
                         .foregroundStyle(.cDarkBlue)
                         .padding(.horizontal, 30)
-
+                        
+                        Text("Arrosage")
+                            .font(.headline)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.cYellow)
+                            .cornerRadius(12)
+                            .shadow(radius: 2)
+                            .padding(.horizontal)
+                        
                         Picker("Arrosage", selection: $watering) {
                             ForEach(WateringFrequency.allCases, id: \.self) {
                                 water in
@@ -173,6 +209,7 @@ struct AddPlantView: View {
                 .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
             }
         }
+        .navigationTitle("Nouvelle plante")
         .fullScreenCover(isPresented: $showFullScreen) {
             if selectedPhoto != nil {
                 ZStack {
@@ -201,7 +238,6 @@ struct AddPlantView: View {
                 Text("Pas d'image")
             }
         }
-        .navigationTitle("Nouvelle plante")
     }
 }
 
