@@ -1,9 +1,11 @@
-import SwiftUI
 import AVFoundation
+import SwiftUI
 
-struct CameraPreview: UIViewRepresentable {
+//Pont entre UIKit (preview caméra) et SwiftUI.
+struct CameraPreview: UIViewRepresentable {//permet d’insérer une vue UIKit
     var layer: AVCaptureVideoPreviewLayer?
 
+    //crée un UIView vide et y ajoute la couche de preview.
     func makeUIView(context: Context) -> UIView {
         let view = UIView()
         if let layer = layer {
@@ -13,30 +15,38 @@ struct CameraPreview: UIViewRepresentable {
         return view
     }
 
+    //ajuste la taille de la couche si l’écran change.
     func updateUIView(_ uiView: UIView, context: Context) {
         if let layer = layer {
-            layer.frame = uiView.bounds
+            DispatchQueue.main.async {
+                layer.frame = uiView.bounds
+            }
         }
     }
 }
 
 struct CameraScreen: View {
-    @StateObject var viewModel = PhotoViewModel()
+    //observes le PhotoViewModel
+    @ObservedObject var viewModel: PhotoViewModel
+    //Fermer la modal
+    @Environment(\.dismiss) private var dismiss
+
+    
 
     var body: some View {
         ZStack {
             if let layer = viewModel.cameraManager.previewLayer {
                 CameraPreview(layer: layer)
                     .ignoresSafeArea()
-            } else {
-                Color.black.ignoresSafeArea()
             }
 
             VStack {
                 Spacer()
-
+                
+                //Bouton prendre une photo
                 Button(action: {
                     viewModel.takePhoto()
+                    dismiss()   //ferme la modal
                 }) {
                     Circle()
                         .fill(Color.white)
@@ -44,13 +54,12 @@ struct CameraScreen: View {
                         .padding()
                         .shadow(radius: 5)
                 }
-
-                // Liste des photos capturées
-                List(viewModel.photos, id: \.self) { name in
-                    Text(name)
-                }
-                .frame(height: 200)
             }
+        }.onAppear {
+            viewModel.cameraManager.startSession()
+        }
+        .onDisappear {
+            viewModel.cameraManager.stopSession()
         }
     }
 }

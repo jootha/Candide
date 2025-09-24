@@ -2,12 +2,11 @@
 //  Models.swift
 //  LeaDEMOexo
 //
-//  Created by apprenant95 on 15/09/2025.
+//  Fusion des deux versions du 15/09/2025
 //
 
 import SwiftUI
 
-//Enums de la structure de plantes
 enum SoilType: String, CaseIterable, Hashable  {
     case wellDrained = "Bien drainé"
     case sandy = "Sableux"
@@ -32,7 +31,6 @@ enum Sunlight: String, CaseIterable, Hashable {
     case shade = "Ombre"
 }
 
-//Enum de filtres de posts
 enum Filter: String, CaseIterable, Hashable {
     case interior = "Plantes d’intérieur"
     case aromatic = "Plantes aromatiques"
@@ -43,7 +41,15 @@ enum Filter: String, CaseIterable, Hashable {
     case edible = "Plantes comestibles"
 }
 
-//  Structure de posts
+enum RepeatInterval: String, CaseIterable, Hashable {
+    case none = "Aucune"
+    case daily = "Tous les jours"
+    case every2Days = "Tous les 2 jours"
+    case weekly = "1 fois par semaine"
+    case biweekly = "Toutes les 2 semaines"
+    case every10Days = "Tous les 10 jours"
+}
+
 struct Post: Identifiable {
     var id = UUID()
     var title: String
@@ -54,10 +60,9 @@ struct Post: Identifiable {
     var date: String
     var nbLike: Int
     var filter: Filter
-    var comments: Comment
+    var comments: [Comment]
 }
 
-//  Structure de commentaires
 struct Comment: Identifiable {
     var id = UUID()
     var commentText: String
@@ -65,14 +70,12 @@ struct Comment: Identifiable {
     var author: Profile
 }
 
-//  Structure de profil utilisateur
 struct Profile: Identifiable {
     var id = UUID()
     var username: String
     var profilePic: String
 }
 
-//  Classe de plantes
 class Plant: Identifiable, ObservableObject, Hashable {
     var id = UUID()
     @Published var name: String
@@ -81,6 +84,7 @@ class Plant: Identifiable, ObservableObject, Hashable {
     @Published var watering: WateringFrequency
     @Published var sunlight: Sunlight
     @Published var isIndoor: Bool
+    @Published var note: String
 
     init(
         name: String,
@@ -88,7 +92,8 @@ class Plant: Identifiable, ObservableObject, Hashable {
         soilType: SoilType,
         watering: WateringFrequency,
         sunlight: Sunlight,
-        isIndoor: Bool
+        isIndoor: Bool,
+        note: String
     ) {
         self.name = name
         self.imageName = imageName
@@ -96,6 +101,7 @@ class Plant: Identifiable, ObservableObject, Hashable {
         self.watering = watering
         self.sunlight = sunlight
         self.isIndoor = isIndoor
+        self.note = ""
     }
 
     static func == (lhs: Plant, rhs: Plant) -> Bool {
@@ -107,24 +113,26 @@ class Plant: Identifiable, ObservableObject, Hashable {
     }
 }
 
-//  Classe de tâches
 class PlantTask: Identifiable, ObservableObject, Hashable {
     var id = UUID()
     @Published var name: String
     @Published var date: String
     @Published var isDone: Bool
     @Published var plantID: UUID
+    @Published var repeatInterval: RepeatInterval
 
     init(
         name: String,
         date: String,
         isDone: Bool,
-        plantID: UUID
+        plantID: UUID,
+        repeatInterval: RepeatInterval = .none
     ) {
         self.name = name
         self.date = date
         self.isDone = isDone
         self.plantID = plantID
+        self.repeatInterval = repeatInterval
     }
 
     static func == (lhs: PlantTask, rhs: PlantTask) -> Bool {
@@ -133,6 +141,18 @@ class PlantTask: Identifiable, ObservableObject, Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+
+    func nextDate() -> Date? {
+        guard let currentDate = taskDateFormatter.date(from: self.date) else { return nil }
+        switch repeatInterval {
+        case .daily:       return Calendar.current.date(byAdding: .day, value: 1,  to: currentDate)
+        case .every2Days:  return Calendar.current.date(byAdding: .day, value: 2,  to: currentDate)
+        case .weekly:      return Calendar.current.date(byAdding: .day, value: 7,  to: currentDate)
+        case .biweekly:    return Calendar.current.date(byAdding: .day, value: 14, to: currentDate)
+        case .every10Days: return Calendar.current.date(byAdding: .day, value: 10, to: currentDate)
+        case .none:        return nil
+        }
     }
 }
 
@@ -143,41 +163,57 @@ class PlantListClass: ObservableObject {
         self.plantList = listPlants
     }
     
-    func printPlantListNames() {
-        print("Printing plant list: [")
-        for plant in plantList {
-            print("name : " + plant.name)
-        }
-        print("]")
-    }
-    func removePlant(_ plant : Plant){
+    func removePlant(_ plant: Plant) {
         if let index = plantList.firstIndex(where: { $0.id == plant.id }) {
             plantList.remove(at: index)
         }
-        print("plant removed : \(plant.name)")
     }
-
 }
 
 class TaskListClass: ObservableObject {
     @Published var taskList: [PlantTask]
-
+    
     init(listTasks: [PlantTask] = taskListInitVar) {
         self.taskList = listTasks
     }
-
-    func printTaskListNames() {
-        print("Printing task list: [")
-        for myTask in taskList {
-            print("name : " + myTask.name)
-        }
-        print("]")
-    }
-
+    
     func removeTask(_ myTask: PlantTask) {
         if let index = taskList.firstIndex(where: { $0.id == myTask.id }) {
             taskList.remove(at: index)
         }
-        print("task removed : \(myTask.name)")
+    }
+    
+    func pendingTasks(for date: Date) -> [PlantTask] {
+        taskList.filter { $0.date == date.formatted(date: .numeric, time: .omitted) && !$0.isDone }
+    }
+    
+    func doneTasks(for date: Date) -> [PlantTask] {
+        taskList.filter { $0.date == date.formatted(date: .numeric, time: .omitted) && $0.isDone }
+    }
+    
+}
+
+class PostListClass: ObservableObject {
+    @Published var postsList: [Post]
+
+    init(listPosts: [Post] = posts) {
+        self.postsList = listPosts
+    }
+
+    func addPost(_ newPost: Post) {
+        postsList.insert(newPost, at: 0)
+    }
+
+    func addComment(to postId: UUID, comment: Comment) {
+        if let index = postsList.firstIndex(where: { $0.id == postId }) {
+            postsList[index].comments.append(comment)
+        }
     }
 }
+
+// MARK: - Date formatter
+let taskDateFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "dd/MM/yyyy"
+    return formatter
+}()

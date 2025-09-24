@@ -9,23 +9,47 @@ import SwiftUI
 
 struct GardenPlanteFrame: View {
     @ObservedObject var plant: Plant
-    
+
     var body: some View {
 
         ZStack {
-            if let image = plant.imageName {
-                Image(image)
-                    .resizable()
-                    .scaledToFit()
-                    .cornerRadius(16)
-                    .padding(-8)
-                    .overlay(alignment: .topTrailing) {
-                        TrashButton(plant: plant)
+            if let name = plant.imageName {
+                let url = FileManager.default.urls(for: .documentDirectory,in: .userDomainMask)[0]
+                    .appendingPathComponent(name)
+                
+                if let uiImage = UIImage(contentsOfFile: url.path) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width:370, height:250)
+                        .clipped()
+                        .cornerRadius(16)
+                        .padding(-8)
+                        .overlay(alignment: .topTrailing) {
+                            TrashButton(plant: plant)
+                        }
+                } else {
+                    if let image = plant.imageName {
+                        Image(image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width:370, height:250)
+                            .clipped()
+                            .cornerRadius(16)
+                            .padding(-8)
+                            .overlay(alignment: .topTrailing) {
+                                TrashButton(plant: plant)
+                            }
+
                     }
+                }
+
             } else {
                 Image("default")
                     .resizable()
-                    .scaledToFit()
+                    .scaledToFill()
+                    .frame(width:370, height:250)
+                    .clipped()
                     .cornerRadius(16)
                     .padding(-8)
                     //.offset(x: -100, y: 50)

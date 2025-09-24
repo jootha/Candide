@@ -2,6 +2,7 @@ import SwiftUI
 
 struct AddPostView: View {
     @Environment(\.dismiss) var dismiss
+    @ObservedObject var postStore = postListGlobalVar
     @State var title = ""
     @State var description = ""
     @State var contentText = ""
@@ -152,6 +153,18 @@ struct AddPostView: View {
                 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Publier") {
+                        let newPost = Post(
+                            title: title,
+                            image: selectedSymbol,
+                            contentText: contentText,
+                            description: description,
+                            author: users.first ?? Profile(username: "Utilisateur", profilePic: "person.circle"),
+                            date: Date.now.formatted(date: .abbreviated, time: .omitted),
+                            nbLike: 0,
+                            filter: selectedFilter,
+                            comments: []
+                        )
+                        postStore.addPost(newPost)
                         dismiss()
                     }
                     .disabled(title.isEmpty || description.isEmpty || contentText.isEmpty)

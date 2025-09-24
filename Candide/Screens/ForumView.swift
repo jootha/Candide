@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct ForumView: View {
-    let postsData: [Post] = posts
+    @ObservedObject var postStore = postListGlobalVar
     @State var selected: Filter?
 
     var categories: [Filter] { Filter.allCases }
@@ -18,13 +18,15 @@ struct ForumView: View {
                     Text("Forum")
                         .font(.system(size: 28, weight: .bold))
                         .foregroundStyle(.white)
-                        .padding(.top, -50)
+                        .padding(.top, 8)
 
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 14) {
                             ForEach(categories, id: \.self) { cat in
                                 Button {
-                                    selected = (selected == cat) ? nil : cat
+                                    withAnimation(.easeInOut) {
+                                        selected = (selected == cat) ? nil : cat
+                                    }
                                 } label: {
                                     Text(cat.rawValue)
                                         .lineLimit(1)
@@ -42,20 +44,22 @@ struct ForumView: View {
                     }
                     .padding(.top, 36)
 
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 24)
-                            .stroke(Color.black.opacity(0.08), lineWidth: 1)
-                            .background(
-                                RoundedRectangle(cornerRadius: 24)
-                                    .fill(Color.cYellow)
-                            )
-                        contentList
+                    ScrollView {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 24)
+                                .stroke(Color.black.opacity(0.08), lineWidth: 1)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 24)
+                                        .fill(Color.cYellow)
+                                )
+                            contentList
+                                .padding(.bottom, 120)
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.top, 24)
+                        .padding(.bottom, 24)
                     }
-                    .padding(.horizontal, 8)
-                    .padding(.top, 24)
-                    .padding(.bottom, 24)
-
-                    Spacer(minLength: 0)
+                    .animation(.easeInOut, value: selected)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -69,11 +73,14 @@ struct ForumView: View {
                 }
             }
         }
+        .safeAreaInset(edge: .bottom) {
+            Color.clear.frame(height: 90)
+        }
     }
 
     var filteredItems: [Post] {
-        guard let sel = selected else { return postsData }
-        return postsData.filter { $0.filter == sel }
+        guard let sel = selected else { return postStore.postsList }
+        return postStore.postsList.filter { $0.filter == sel }
     }
 
     var contentList: some View {
@@ -92,7 +99,7 @@ struct ForumView: View {
             } else {
                 VStack(spacing: 0) {
                     ForEach(Array(filteredItems.enumerated()), id: \.offset) { idx, post in
-                        NavigationLink { PostDetail1(post: post) } label: {
+                        NavigationLink { PostDetailView(post: post) } label: {
                             Row(post: post)
                         }
                         .buttonStyle(.plain)

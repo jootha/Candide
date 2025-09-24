@@ -53,6 +53,7 @@ struct Garden: View {
             .navigationDestination(for: Plant.self) { plant in
                 PlantView(plant: plant, navPath: $navPath)
             }
+            .navigationTitle("Mon Jardin")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
