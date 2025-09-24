@@ -68,15 +68,7 @@ struct GardenPlanteFrame: View {
                         .cornerRadius(16)
                     Spacer()
                 }
-                if let imageName = plant.imageName {
-                    Text(imageName).font(.system(size: 16)).bold()
-                        .foregroundStyle(.cDarkBlue)
-                        .padding()
-                        .background(Color.white.opacity(0.8))
-                        .cornerRadius(16)
-                    Spacer()
-                }
-               
+                Spacer()
             }
 
         }.frame(maxWidth: .infinity, maxHeight: .infinity)

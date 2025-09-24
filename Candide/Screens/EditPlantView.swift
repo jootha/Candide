@@ -15,32 +15,43 @@ struct EditPlantView: View {
     @State var selectedSunLight: Sunlight = .fullSun
     @State var selectedWatering: WateringFrequency = .daily
     @Environment(\.dismiss) var dismiss
-    
-    
+
     @ObservedObject var photoViewModel = PhotoViewModel()
     @State private var showCamera = false
     @State private var selectedPhoto: UIImage? = nil
     @State private var showFullScreen = false
-    
-    var imageNew: Image {//if else empty && ou
+
+    var imageNew: Image {
+        // Photo sauvegardée dans la plante (asset ou documents)
+        if let imageName = plant.imageName {
+            // Si c’est une photo prise avec la caméra (documents)
+            let url = FileManager.default.urls(
+                for: .documentDirectory,
+                in: .userDomainMask
+            )[0]
+            .appendingPathComponent(imageName)
+            if FileManager.default.fileExists(atPath: url.path),
+                let uiImage = UIImage(contentsOfFile: url.path)
+            {
+                return Image(uiImage: uiImage)
+            } else {
+                // Sinon c’est une image des Assets
+                return Image(imageName)
+            }
+        }
+
+        // Sinon, photo prise
         if !globalLastPhotoTaken.isEmpty {
-            let url = FileManager.default.urls(for: .documentDirectory,in: .userDomainMask)[0]
-                .appendingPathComponent(globalLastPhotoTaken)
-            
+            let url = FileManager.default.urls(
+                for: .documentDirectory,
+                in: .userDomainMask
+            )[0]
+            .appendingPathComponent(globalLastPhotoTaken)
             if let uiImage = UIImage(contentsOfFile: url.path) {
                 return Image(uiImage: uiImage)
-                    
-            } else {//Image des Assets
-                if let image = plant.imageName {
-                    
-                    return Image(image)
-                        
-                }
             }
         }
         return Image("default")
-                
-        
     }
 
     var body: some View {
@@ -64,42 +75,120 @@ struct EditPlantView: View {
                     }
                 }
                 Toggle("En Interieur?", isOn: $plant.isIndoor)
-                
-                imageNew
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 350, height: 350)
-                    .clipped()
-                    .cornerRadius(12)
-                    .onTapGesture {
-                        //photoViewModel.photo = uiImage
-                        selectedPhoto = photoViewModel.photo
-                        showFullScreen = true
+
+                // Affichage des images avec gesture
+                if let uiImage = photoViewModel.photo {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 350, height: 350)
+                        .clipped()
+                        .cornerRadius(12)
+                        .onTapGesture {
+                            selectedPhoto = uiImage
+                            showFullScreen = true
+                        }
+                } else if let imageName = plant.imageName {  //Image enregistré en cache
+                    let url = FileManager.default.urls(
+                        for: .documentDirectory,
+                        in: .userDomainMask
+                    )[0]
+                    .appendingPathComponent(imageName)
+
+                    if let uiImage = UIImage(contentsOfFile: url.path) {
+                        Image(uiImage: uiImage).resizable()
+                            .scaledToFill()
+                            .frame(width: 350, height: 350)
+                            .clipped()
+                            .cornerRadius(12)
+                            .onTapGesture {
+                                selectedPhoto = UIImage(named: imageName)
+                                showFullScreen = true
+                            }
+                    } else {
+                        Image(imageName)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 350, height: 350)
+                            .clipped()
+                            .cornerRadius(12)
+                            .onTapGesture {
+                                selectedPhoto = UIImage(named: imageName)
+                                showFullScreen = true
+                            }
+                    }
+
+                } else {
+                    Image("default")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 350, height: 350)
+                        .clipped()
+                        .cornerRadius(12)
+                        .onTapGesture {
+                            selectedPhoto = UIImage(named: "default")
+                            showFullScreen = true
+                        }
                 }
 
                 if selectedPhoto != nil {
-                   Image(uiImage: selectedPhoto!)
-                      .resizable()
-                      .scaledToFill()
+                    Image(uiImage: selectedPhoto!)
+                        .resizable()
+                        .scaledToFill()
                         .frame(width: 1, height: 1)
-               }
-                Button {
-                    showCamera = true
-                } label: {
-                    Label("Plus", systemImage: "photo")
-                        .labelStyle(.iconOnly)
-                        .padding(16)
-                        .background(.cDarkBlue)
-                        .foregroundStyle(.cOrange)
-                        .cornerRadius(32)
-                        .font(.system(size: 32))
-                        .bold()
-                }.sheet(isPresented: $showCamera) {
-                    CameraScreen(viewModel: photoViewModel)
+                }
+                HStack {
+                    Spacer()
+                    Button {
+                        showCamera = true
+                    } label: {
+                        Label("Plus", systemImage: "photo")
+                            .labelStyle(.iconOnly)
+                            .padding(16)
+                            .background(.cDarkBlue)
+                            .foregroundStyle(.cOrange)
+                            .cornerRadius(32)
+                            .font(.system(size: 32))
+                            .bold()
+                    }.sheet(isPresented: $showCamera) {
+                        CameraScreen(viewModel: photoViewModel)
+                    }
+                    Spacer()
                 }
             }
-            .onChange(of: photoViewModel.photo){ new in
+            .scrollContentBackground(.hidden)
+            .background(
+                Color.cYellow.opacity(0.3),
+                in: RoundedRectangle(cornerRadius: 12)
+            )
+            .onChange(of: photoViewModel.photo) { new in
                 print(globalLastPhotoTaken)
+            }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Annuler") {
+                        plant.name = tmpPlantName
+                        globalLastPhotoTaken = ""
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Enregistrer") {
+                        plant.name = tmpPlantName
+                        plant.soilType = selectedSoil
+                        plant.imageName =
+                            globalLastPhotoTaken.isEmpty
+                            ? nil : globalLastPhotoTaken
+                        plant.watering = selectedWatering
+                        plant.sunlight = selectedSunLight
+                        globalLastPhotoTaken = ""
+                        dismiss()
+                    }
+                    .disabled(
+                        plant.name.trimmingCharacters(in: .whitespaces).isEmpty
+                    )
+                    .tint(.cGreen)
+                }
             }
             .fullScreenCover(isPresented: $showFullScreen) {
                 if selectedPhoto != nil {
@@ -129,32 +218,13 @@ struct EditPlantView: View {
                     Text("Pas d'image")
                 }
             }
-            //Edit Image
-            
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Annuler") {
-                        plant.name = tmpPlantName
-                        globalLastPhotoTaken = ""
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Enregistrer") {
-                        plant.name = tmpPlantName
-                        plant.soilType = selectedSoil
-                        plant.imageName = globalLastPhotoTaken.isEmpty ? nil : globalLastPhotoTaken
-                        plant.watering = selectedWatering
-                        plant.sunlight = selectedSunLight
-                        globalLastPhotoTaken = ""
-                        dismiss()
-                    }
-                    .disabled(plant.name.trimmingCharacters(in: .whitespaces).isEmpty)
-                    .tint(.white)
-                }
-            }
         }
     }
 }
 
-#Preview {EditPlantView(plant: plantListGlobalVar.plantList[0], tmpPlantName: plantListGlobalVar.plantList[0].name)}
+#Preview {
+    EditPlantView(
+        plant: plantListGlobalVar.plantList[0],
+        tmpPlantName: plantListGlobalVar.plantList[0].name
+    )
+}

@@ -22,6 +22,7 @@ struct AddPlantView: View {
     @State private var showFullScreen = false
 
     var body: some View {
+        
             ZStack {
                 Form {
                     VStack {
@@ -44,51 +45,55 @@ struct AddPlantView: View {
                             }
                         }
                         Toggle("En Interieur?", isOn: $isIndoor)
-                        Image(uiImage: photoViewModel.photo)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 100, height: 100)
-                            .clipped()
-                            .cornerRadius(12)
+                        if let image = photoViewModel.photo {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 350, height: 350)
+                                .clipped()
+                                .cornerRadius(12)
+                                .onTapGesture {
+                                    selectedPhoto = photoViewModel.photo
+                                    showFullScreen = true
+                                }
+                        }
+                        
                     }
+                    .scrollContentBackground(.hidden)
                     .background(
                         Color.cYellow.opacity(0.3),
                         in: RoundedRectangle(cornerRadius: 12)
                     )
-                }.scrollContentBackground(.hidden)
-
-            }
-            Image(uiImage: photoViewModel.photo)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 350, height: 350)
-                .clipped()
-                .cornerRadius(12)
-                .onTapGesture {
-                    selectedPhoto = photoViewModel.photo
-                    showFullScreen = true
+                    if selectedPhoto != nil {
+                        Image(uiImage: selectedPhoto!)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 1, height: 1)
+                    }
+                    //Ajout Image
+                    HStack{
+                        
+                        Spacer()
+                        Button {
+                            showCamera = true
+                        } label: {
+                            Label("Plus", systemImage: "photo")
+                                .labelStyle(.iconOnly)
+                                .padding(16)
+                                .background(.cDarkBlue)
+                                .foregroundStyle(.cOrange)
+                                .cornerRadius(32)
+                                .font(.system(size: 32))
+                                .bold()
+                        }.sheet(isPresented: $showCamera) {
+                            CameraScreen(viewModel: photoViewModel)
+                        }
+                        Spacer()
+                    }
                 }
-            if selectedPhoto != nil {
-                Image(uiImage: selectedPhoto!)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 1, height: 1)
+                
             }
-            //Ajout Image
-            Button {
-                showCamera = true
-            } label: {
-                Label("Plus", systemImage: "photo")
-                    .labelStyle(.iconOnly)
-                    .padding(16)
-                    .background(.cDarkBlue)
-                    .foregroundStyle(.cOrange)
-                    .cornerRadius(32)
-                    .font(.system(size: 32))
-                    .bold()
-            }.sheet(isPresented: $showCamera) {
-                CameraScreen(viewModel: photoViewModel)
-            }
+           
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Enregistrer") {
