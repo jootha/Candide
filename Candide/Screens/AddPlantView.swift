@@ -45,17 +45,19 @@ struct AddPlantView: View {
                             }
                         }
                         Toggle("En Interieur?", isOn: $isIndoor)
+                        if let image = photoViewModel.photo {
+                            Image(uiImage: image)
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 350, height: 350)
+                                .clipped()
+                                .cornerRadius(12)
+                                .onTapGesture {
+                                    selectedPhoto = photoViewModel.photo
+                                    showFullScreen = true
+                                }
+                        }
                         
-                        Image(uiImage: photoViewModel.photo)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 350, height: 350)
-                            .clipped()
-                            .cornerRadius(12)
-                            .onTapGesture {
-                                selectedPhoto = photoViewModel.photo
-                                showFullScreen = true
-                            }
                     }
                     .scrollContentBackground(.hidden)
                     .background(
