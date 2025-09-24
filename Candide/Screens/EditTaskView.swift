@@ -16,34 +16,27 @@ struct EditTaskView: View {
     @Environment(\.dismiss) var dismiss
     @State var tmpName: String
     @State var tmpTask: Bool
-
+    
     var dateStringFormatter: DateFormatter {
         let formatter = DateFormatter()
-
+        
         formatter.dateFormat = "dd/MM/yyyy"
         return formatter
     }
-
+    
     var body: some View {
         NavigationView {
             ZStack {
                 Color.cGreen.ignoresSafeArea()
-
+                
                 Form {
-                    TextField("Nom de la tâche", text: $tmpName)
+                    TextField(myTask.name, text: $tmpName)
                         .focused($isTextFieldFocused)
-                        .onAppear {self.isTextFieldFocused = true}
+                    
                     
                     DatePicker(
                         "Date",
-                        selection: Binding(
-                            get: {
-                                dateStringFormatter.date(from: myTask.date) ?? Date()
-                            },
-                            set: { newDate in
-                                myTask.date = dateStringFormatter.string(from: newDate)
-                            }
-                        ),
+                        selection: $taskDate,
                         displayedComponents: .date
                     )
                     
@@ -53,10 +46,10 @@ struct EditTaskView: View {
                         }
                     }
                     
-                    Toggle("Déjà effectuée", isOn: $myTask.isDone)
+                    Toggle("Déjà effectuée", isOn: $tmpTask)
                     
                 }
-
+                
             }
             .scrollContentBackground(.hidden)
             .toolbar {
@@ -67,20 +60,28 @@ struct EditTaskView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Enregistrer") {
-                        dismiss()
                         myTask.name = tmpName
                         myTask.date = dateStringFormatter.string(from: taskDate)
+                        myTask.repeatInterval = repeatInterval
                         myTask.isDone = tmpTask
+                        dismiss()
                     }
                     .disabled(myTask.name.trimmingCharacters(in: .whitespaces).isEmpty)
                     .tint(.white)
-
+                    
                 }
             }
             .navigationTitle("Modifier la tâche")
+            .onAppear {
+                tmpName = myTask.name
+                tmpTask = myTask.isDone
+                repeatInterval = myTask.repeatInterval
+                taskDate = dateStringFormatter.date(from: myTask.date) ?? Date()
+                isTextFieldFocused = true
+            }
         }
         .navigationBarBackButtonHidden(true)
-
+        
     }
 }
 
@@ -89,7 +90,7 @@ struct EditTaskView: View {
     NavigationStack {
         EditTaskView(
             myTask: taskListGlobalVar.taskList[0],
-            tmpName: "Tache Test",
+            tmpName: "",
             tmpTask: false
         )}
 }
