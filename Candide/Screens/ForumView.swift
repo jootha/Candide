@@ -18,18 +18,16 @@ struct ForumView: View {
                     HStack {
                         Spacer()
                         
-                        Text("Ajouter un post")
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 4)
-                        .foregroundStyle(.cOrange)
-                        .cornerRadius(16)
-                        .bold()
-                        
                         NavigationLink { AddPostView() } label: {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.system(size: 64))
-                                .font(.title2)
-                                .symbolRenderingMode(.hierarchical)
+                            Image(systemName: "plus")
+                                .labelStyle(.iconOnly)
+                                .padding(8)
+                                .background(.cDarkBlue)
+                                .foregroundStyle(.cOrange)
+                                .cornerRadius(32)
+                                .font(.system(size: 32))
+                                .bold()
+                                .padding(12)
                         }
                     }
 
