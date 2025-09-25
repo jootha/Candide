@@ -11,16 +11,32 @@ struct EditPlantView: View {
     @ObservedObject var plant: Plant
     @FocusState private var isTextFieldFocused: Bool
     @State var tmpPlantName: String
+    @State var tmpPlantSoil: SoilType
+    @State var tmpPlantSunLight: Sunlight
+    @State var tmpPlantWatering: WateringFrequency
+    @State var tmpPlantIsDoor : Bool
+    @State var tmpPlantImageName : String
+
+    init(plant: Plant) {
+        self.plant = plant
+        _tmpPlantName = State(initialValue: plant.name)
+        _tmpPlantSoil = State(initialValue: plant.soilType)
+        _tmpPlantSunLight = State(initialValue: plant.sunlight)
+        _tmpPlantWatering = State(initialValue: plant.watering)
+        _tmpPlantIsDoor = State(initialValue: plant.isIndoor)
+        _tmpPlantImageName = State(initialValue: plant.imageName!)
+    }
+
     @State var selectedSoil: SoilType = .wellDrained
     @State var selectedSunLight: Sunlight = .fullSun
     @State var selectedWatering: WateringFrequency = .daily
     @Environment(\.dismiss) var dismiss
-
+    
     @ObservedObject var photoViewModel = PhotoViewModel()
     @State private var showCamera = false
     @State private var selectedPhoto: UIImage? = nil
     @State private var showFullScreen = false
-
+    
     var imageNew: Image {
         // Photo sauvegardée dans la plante (asset ou documents)
         if let imageName = plant.imageName {
@@ -29,9 +45,9 @@ struct EditPlantView: View {
                 for: .documentDirectory,
                 in: .userDomainMask
             )[0]
-            .appendingPathComponent(imageName)
+                .appendingPathComponent(imageName)
             if FileManager.default.fileExists(atPath: url.path),
-                let uiImage = UIImage(contentsOfFile: url.path)
+               let uiImage = UIImage(contentsOfFile: url.path)
             {
                 return Image(uiImage: uiImage)
             } else {
@@ -39,25 +55,25 @@ struct EditPlantView: View {
                 return Image(imageName)
             }
         }
-
+        
         // Sinon, photo prise
         if !globalLastPhotoTaken.isEmpty {
             let url = FileManager.default.urls(
                 for: .documentDirectory,
                 in: .userDomainMask
             )[0]
-            .appendingPathComponent(globalLastPhotoTaken)
+                .appendingPathComponent(globalLastPhotoTaken)
             if let uiImage = UIImage(contentsOfFile: url.path) {
                 return Image(uiImage: uiImage)
             }
         }
         return Image("default")
     }
-
+    
     var body: some View {
         NavigationView {
             Form {
-                TextField("**Nom**", text: $tmpPlantName)
+                TextField("**Nom**", text: $plant.name)
                 //  IMAGES??t???
                 Picker("Ensoleillement", selection: $selectedSunLight) {
                     ForEach(Sunlight.allCases, id: \.self) { light in
@@ -75,7 +91,7 @@ struct EditPlantView: View {
                     }
                 }
                 Toggle("En Interieur?", isOn: $plant.isIndoor)
-
+                
                 // Affichage des images avec gesture
                 if let uiImage = photoViewModel.photo {
                     Image(uiImage: uiImage)
@@ -93,8 +109,8 @@ struct EditPlantView: View {
                         for: .documentDirectory,
                         in: .userDomainMask
                     )[0]
-                    .appendingPathComponent(imageName)
-
+                        .appendingPathComponent(imageName)
+                    
                     if let uiImage = UIImage(contentsOfFile: url.path) {
                         Image(uiImage: uiImage).resizable()
                             .scaledToFill()
@@ -117,7 +133,7 @@ struct EditPlantView: View {
                                 showFullScreen = true
                             }
                     }
-
+                    
                 } else {
                     Image("default")
                         .resizable()
@@ -130,7 +146,7 @@ struct EditPlantView: View {
                             showFullScreen = true
                         }
                 }
-
+                
                 if selectedPhoto != nil {
                     Image(uiImage: selectedPhoto!)
                         .resizable()
@@ -165,16 +181,24 @@ struct EditPlantView: View {
                 print(globalLastPhotoTaken)
             }
             .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Annuler") {
+                        plant.name = tmpPlantName
+                        plant.soilType = tmpPlantSoil
+                        plant.imageName = tmpPlantImageName
+                        plant.watering = tmpPlantWatering
+                        plant.sunlight = tmpPlantSunLight
+                        plant.isIndoor = tmpPlantIsDoor
+                        plant.imageName = tmpPlantImageName
+                        dismiss()
+                    }
+                }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Enregistrer") {
-                        plant.name = tmpPlantName
                         plant.soilType = selectedSoil
-                        plant.imageName =
-                            globalLastPhotoTaken.isEmpty
-                            ? nil : globalLastPhotoTaken
+                        plant.imageName = globalLastPhotoTaken.isEmpty ? nil : globalLastPhotoTaken
                         plant.watering = selectedWatering
                         plant.sunlight = selectedSunLight
-                        globalLastPhotoTaken = ""
                         dismiss()
                     }
                     .disabled(
@@ -218,6 +242,6 @@ struct EditPlantView: View {
 #Preview {
     EditPlantView(
         plant: plantListGlobalVar.plantList[0],
-        tmpPlantName: plantListGlobalVar.plantList[0].name
+//        tmpPlantName: plantListGlobalVar.plantList[0].name
     )
 }
