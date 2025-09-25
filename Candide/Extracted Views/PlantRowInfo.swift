@@ -19,12 +19,18 @@ struct PlantRowInfo: View {
                 .font(.system(size: 24))
 
             VStack(alignment: .leading, spacing: 2) {
-                Text(plantText + ":")
-                    .font(.footnote)
-                    .bold()
-                Text(plantValue)
-                    .font(.footnote)
-            }
+                if(plantText == "Interieur" || plantText == "Extérieur"){
+                    Text(plantText)
+                        .font(.footnote)
+                        .bold()
+                        .padding(.top, 6)
+                } else {
+                    Text(plantText + ":")
+                        .font(.footnote)
+                        .bold()
+                    Text(plantValue)
+                        .font(.footnote)
+                }}
 
             Spacer()
         }
