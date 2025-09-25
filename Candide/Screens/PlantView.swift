@@ -63,7 +63,7 @@ struct PlantView: View {
                         HStack {
                             Spacer ()
                             //  MODIF PLANT
-                            Button {
+                            /*Button {
                                 showingEditView.toggle()
                             } label: {
                                 ZStack {
@@ -76,9 +76,9 @@ struct PlantView: View {
                                 }
                             }
                             .sheet(isPresented: $showingEditView) {
-                                EditPlantView(plant: plant)
+                                EditPlantView(initialPlant: plant)
                             }
-                            
+                             */
                             //  DELETE PLANT
                             Button {
                                 showingAlert = true

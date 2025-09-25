@@ -46,7 +46,7 @@ struct Garden: View {
                         Spacer()
                         AddButton(action: "garden",navPath: $navPath)
                             .padding()
-                    }
+                    }.padding(.horizontal,30)
                 }
 
             }
