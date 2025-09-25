@@ -76,7 +76,7 @@ struct PlantView: View {
                                 }
                             }
                             .sheet(isPresented: $showingEditView) {
-                                EditPlantView(plant: plant, tmpPlantName: plant.name)
+                                EditPlantView(plant: plant)
                             }
                             
                             //  DELETE PLANT
