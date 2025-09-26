@@ -44,7 +44,7 @@ struct AddPlantView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 12) {
                         
-                        Text("Nom de la tâche")
+                        Text("Nom de la plante")
                             .font(.headline)
                             .padding(.horizontal, 12)
                             .padding(.vertical, 6)

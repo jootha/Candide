@@ -21,12 +21,13 @@ struct TrashButton: View {
             
         } label: {
             ZStack {  //Bouton edit
-                Circle().frame(width: 30)
+                Circle().frame(width: 40)
                     .foregroundColor(.cDarkBlue)
                 Image(systemName: "trash")
                     .opacity(0.8)
                     .foregroundColor(.cOrange)
-                    .font(.system(size: 15))
+                    .font(.system(size: 20))
+                    .shadow(radius: 3)
             }
         }.alert(isPresented: $showingAlert) {
             Alert(
