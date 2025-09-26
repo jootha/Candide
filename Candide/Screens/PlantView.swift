@@ -252,7 +252,7 @@ struct PlantView: View {
                                 Text("Notes: ")
                                     .font(.headline)
                                     .padding(.horizontal, 12)
-                                    .paddingg(.vertical, 6)
+                                    .padding(.vertical, 6)
                                     .background(Color.cYellow)
                                     .cornerRadius(12)
                                     .shadow(radius: 2)
