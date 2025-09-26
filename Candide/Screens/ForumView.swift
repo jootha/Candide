@@ -43,7 +43,7 @@ struct ForumView: View {
                                         .lineLimit(1)
                                         .padding(.horizontal, 14)
                                         .padding(.vertical, 10)
-                                        .background(Capsule().fill(selected == cat ? .cGreen.opacity(0.25) : .white.opacity(0.15)))
+                                        .background(Capsule().fill(selected == cat ? .cDarkBlue.opacity(0.7) : .white.opacity(0.15)))
                                         .overlay(Capsule().stroke(.white.opacity(0.3), lineWidth: 1))
                                         .foregroundStyle(.white)
                                 }
